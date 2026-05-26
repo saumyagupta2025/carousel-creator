@@ -15,7 +15,7 @@ export default function App() {
   const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [selectedId, setSelectedId] = useState(DEFAULT_SLIDES[0].id);
   const [authorName, setAuthorName] = useState('@hiddenlayer.ai');
-  const [profileImage, setProfileImage] = useState('/profile.jpeg');
+  const [profileImage, setProfileImage] = useState(`${import.meta.env.BASE_URL}profile.jpeg`);
 
   const selectedIndex = slides.findIndex((s) => s.id === selectedId);
   const selectedSlide = slides[selectedIndex] ?? null;
