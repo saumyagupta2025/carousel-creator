@@ -118,6 +118,31 @@ export default function Sidebar({
 }) {
   const [addType, setAddType] = useState('text');
   const profileInputRef = useRef(null);
+  const importRef = useRef(null);
+
+  function handleImport(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        const carousel = Array.isArray(data) ? data[0] : data;
+        if (!carousel?.slides?.length) throw new Error('No slides found in file');
+        const imported = carousel.slides.map((s) => ({
+          ...createSlide(s.type ?? 'text'),
+          ...s,
+          id: crypto.randomUUID(),
+        }));
+        setSlides(imported);
+        setSelectedId(imported[0]?.id ?? null);
+      } catch (err) {
+        alert(`Import failed: ${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+  }
 
   function handleProfileUpload(e) {
     const file = e.target.files?.[0];
@@ -162,9 +187,17 @@ export default function Sidebar({
     <aside className="w-72 flex-shrink-0 flex flex-col border-r border-white/8 bg-black/30 overflow-hidden">
       {/* Header */}
       <div className="px-4 pt-5 pb-4 border-b border-white/8">
-        <h1 className="text-white font-semibold text-sm tracking-wide mb-4">
-          Carousel Creator
-        </h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-white font-semibold text-sm tracking-wide">Carousel Creator</h1>
+          <button
+            onClick={() => importRef.current?.click()}
+            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-[10px] uppercase tracking-widest transition-colors"
+            title="Import carousel from generated JSON"
+          >
+            ↑ Import
+          </button>
+          <input ref={importRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+        </div>
 
         {/* Template toggle */}
         <div className="mb-4">
