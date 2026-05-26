@@ -54,9 +54,9 @@ Create 6–8 slides. Every slide MUST have a `tag` field (short topic label like
 
 ## Output
 
-Write the carousel as a JSON file using the Write tool to this exact path:
+Write the carousel as a JSON file using the Write tool to this path relative to the project root:
 
-`/Users/saumyagupta/Desktop/content creation/carousel_creator_app/generated-carousels/<slug>.json`
+`generated-carousels/<slug>.json`
 
 Where `<slug>` is a short kebab-case identifier derived from the topic (e.g. `attention-is-all-you-need`, `rlhf-explained`, `moe-architectures`).
 
