@@ -202,26 +202,56 @@ export default function Sidebar({
         {/* Template toggle */}
         <div className="mb-4">
           <p className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Template</p>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setTemplate('dark')}
-              className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`py-2 rounded-lg text-xs font-medium transition-all ${
                 template === 'dark'
                   ? 'bg-white/12 text-white border border-white/20'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
-              Dark Minimal
+              Dark
             </button>
             <button
               onClick={() => setTemplate('warm')}
-              className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`py-2 rounded-lg text-xs font-medium transition-all ${
                 template === 'warm'
                   ? 'bg-amber-50/15 text-amber-100 border border-amber-200/25'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
               Warm Cream
+            </button>
+            <button
+              onClick={() => setTemplate('vivid')}
+              className={`py-2 rounded-lg text-xs font-medium transition-all ${
+                template === 'vivid'
+                  ? 'bg-purple-500/15 text-purple-300 border border-purple-400/30'
+                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
+              }`}
+            >
+              Vivid
+            </button>
+            <button
+              onClick={() => setTemplate('ember')}
+              className={`py-2 rounded-lg text-xs font-medium transition-all ${
+                template === 'ember'
+                  ? 'bg-orange-500/12 text-orange-300 border border-orange-400/25'
+                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
+              }`}
+            >
+              Ember
+            </button>
+            <button
+              onClick={() => setTemplate('ocean')}
+              className={`col-span-2 py-2 rounded-lg text-xs font-medium transition-all ${
+                template === 'ocean'
+                  ? 'bg-cyan-500/12 text-cyan-300 border border-cyan-400/25'
+                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
+              }`}
+            >
+              Ocean
             </button>
           </div>
         </div>

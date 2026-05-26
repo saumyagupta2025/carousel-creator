@@ -91,7 +91,7 @@ function CodeBlock({ code, language }) {
 /* Instagram-style CTA shown in the bottom bar */
 function InstagramCTA({ authorName, profileImage }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 18, width: '100%', justifyContent: 'space-between' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
       {/* Left: profile pic + handle */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div
@@ -285,7 +285,12 @@ export default function WarmCreamSlide({ slide, slideNum, authorName, profileIma
         </div>
 
         {/* Bottom bar */}
-        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD, borderTop: `1px solid ${s.borderColor}`, paddingTop: 24 }}>
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD, borderTop: `1px solid ${s.borderColor}`, paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {slide.tag ? (
+            <div style={{ background: 'rgba(124,111,91,0.1)', border: '1px solid rgba(124,111,91,0.28)', color: '#7c6f5b', borderRadius: 999, padding: '9px 24px', fontSize: 22, fontFamily: s.bodyFont, fontWeight: 400 }}>
+              {slide.tag}
+            </div>
+          ) : <div />}
           <InstagramCTA authorName={authorName} profileImage={profileImage} />
         </div>
       </div>
@@ -368,7 +373,7 @@ export default function WarmCreamSlide({ slide, slideNum, authorName, profileIma
         <SlideContent slide={slide} />
       </div>
 
-      {/* Bottom bar: Instagram CTA */}
+      {/* Bottom bar: tag left | CTA right */}
       <div
         style={{
           position: 'absolute',
@@ -377,8 +382,25 @@ export default function WarmCreamSlide({ slide, slideNum, authorName, profileIma
           right: PAD,
           borderTop: `1px solid ${s.borderColor}`,
           paddingTop: 24,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
+        {slide.tag && slide.type !== 'cover' ? (
+          <div style={{
+            background: 'rgba(124,111,91,0.1)',
+            border: '1px solid rgba(124,111,91,0.28)',
+            color: '#7c6f5b',
+            borderRadius: 999,
+            padding: '9px 24px',
+            fontSize: 22,
+            fontFamily: s.bodyFont,
+            fontWeight: 400,
+          }}>
+            {slide.tag}
+          </div>
+        ) : <div />}
         <InstagramCTA authorName={authorName} profileImage={profileImage} />
       </div>
     </div>
