@@ -224,34 +224,34 @@ export default function Sidebar({
               Warm Cream
             </button>
             <button
-              onClick={() => setTemplate('vivid')}
+              onClick={() => setTemplate('teal')}
               className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'vivid'
-                  ? 'bg-purple-500/15 text-purple-300 border border-purple-400/30'
+                template === 'teal'
+                  ? 'bg-teal-500/15 text-teal-300 border border-teal-400/30'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
-              Vivid
+              Teal
             </button>
             <button
-              onClick={() => setTemplate('ember')}
+              onClick={() => setTemplate('neon')}
               className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'ember'
+                template === 'neon'
+                  ? 'bg-lime-500/12 text-lime-300 border border-lime-400/25'
+                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
+              }`}
+            >
+              Neon
+            </button>
+            <button
+              onClick={() => setTemplate('coral')}
+              className={`col-span-2 py-2 rounded-lg text-xs font-medium transition-all ${
+                template === 'coral'
                   ? 'bg-orange-500/12 text-orange-300 border border-orange-400/25'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
-              Ember
-            </button>
-            <button
-              onClick={() => setTemplate('ocean')}
-              className={`col-span-2 py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'ocean'
-                  ? 'bg-cyan-500/12 text-cyan-300 border border-cyan-400/25'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Ocean
+              Coral
             </button>
           </div>
         </div>
