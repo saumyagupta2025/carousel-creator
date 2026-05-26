@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate": "node scripts/generate-carousels.js"
+    "generate": "node scripts/generate-carousels.js",
+    "convert": "node scripts/convert-carousel.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
