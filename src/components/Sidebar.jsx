@@ -16,13 +16,17 @@ import { CSS } from '@dnd-kit/utilities';
 import { createSlide, SLIDE_TYPES } from '../utils/slideData';
 
 const TYPE_COLORS = {
-  cover: '#6ee7b7',
-  text: '#93c5fd',
-  list: '#fbbf24',
-  code: '#c084fc',
-  longtext: '#fb923c',
-  screenshot: '#f472b6',
-  framed: '#38bdf8',
+  cover:      '#6ee7b7',
+  text:       '#93c5fd',
+  longtext:   '#fb923c',
+  list:       '#fbbf24',
+  doublelist: '#facc15',
+  imagetext:  '#f472b6',
+  textimage:  '#e879f9',
+  cta:        '#34d399',
+  code:       '#c084fc',
+  screenshot: '#94a3b8',
+  framed:     '#38bdf8',
 };
 
 function SortableItem({ slide, index, isSelected, onSelect, onDelete }) {
