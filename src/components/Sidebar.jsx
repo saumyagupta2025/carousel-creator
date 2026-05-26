@@ -224,34 +224,24 @@ export default function Sidebar({
               Warm Cream
             </button>
             <button
-              onClick={() => setTemplate('teal')}
+              onClick={() => setTemplate('tealcard')}
               className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'teal'
+                template === 'tealcard'
                   ? 'bg-teal-500/15 text-teal-300 border border-teal-400/30'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
-              Teal
+              Teal Card
             </button>
             <button
-              onClick={() => setTemplate('bold')}
+              onClick={() => setTemplate('magazine')}
               className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'bold'
-                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-400/30'
+                template === 'magazine'
+                  ? 'bg-stone-100/12 text-stone-200 border border-stone-400/25'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
-              Bold
-            </button>
-            <button
-              onClick={() => setTemplate('coral')}
-              className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'coral'
-                  ? 'bg-orange-500/12 text-orange-300 border border-orange-400/25'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Coral
+              Magazine
             </button>
             <button
               onClick={() => setTemplate('editorial')}
