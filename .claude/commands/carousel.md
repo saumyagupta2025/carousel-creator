@@ -1,3 +1,7 @@
+---
+description: Generate an AI/ML Instagram carousel JSON file ready to import into the Carousel Creator app
+---
+
 Generate an Instagram carousel for @hiddenlayer.ai about: $ARGUMENTS
 
 If no topic is given, pick a compelling AI/ML topic from recent trends — LLMs, agents, inference optimization, training tricks, model architecture breakthroughs, or anything you know is currently being discussed in the AI/ML community.
