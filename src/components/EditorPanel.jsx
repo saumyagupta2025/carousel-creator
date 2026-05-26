@@ -16,6 +16,40 @@ function Field({ label, hint, children }) {
 const inputCls =
   'w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white/80 text-sm placeholder-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none';
 
+// ⚠️ Must be defined OUTSIDE EditorPanel — defining it inside causes React to treat
+// it as a new component type on every render, which unmounts inputs mid-keystroke.
+function BulletsEditor({ bullets, onUpdate: onB, onAdd, onRemove, label = 'Bullet points (max 5)' }) {
+  return (
+    <Field label={label}>
+      <div className="flex flex-col gap-2">
+        {(bullets ?? []).map((bullet, i) => (
+          <div key={i} className="flex gap-2 items-start">
+            <span className="text-white/30 text-sm pt-2.5 flex-shrink-0">
+              {['①', '②', '③', '④', '⑤'][i]}
+            </span>
+            <input
+              type="text"
+              value={bullet}
+              onChange={(e) => onB(i, e.target.value)}
+              placeholder={`Point ${i + 1}...`}
+              className={inputCls}
+            />
+            <button
+              onClick={() => onRemove(i)}
+              className="text-white/20 hover:text-red-400 transition-colors mt-2.5 text-lg leading-none flex-shrink-0"
+            >×</button>
+          </div>
+        ))}
+        {(bullets ?? []).length < 5 && (
+          <button onClick={onAdd} className="text-white/30 hover:text-white/60 text-sm text-left transition-colors py-1">
+            + Add point
+          </button>
+        )}
+      </div>
+    </Field>
+  );
+}
+
 export default function EditorPanel({ slide, onUpdate }) {
   const fileRef = useRef(null);
   const fileRef2 = useRef(null);
@@ -63,36 +97,6 @@ export default function EditorPanel({ slide, onUpdate }) {
     reader.onload = (ev) => update('imageUrl', ev.target.result);
     reader.readAsDataURL(file);
   }
-
-  const BulletsEditor = ({ bullets, onUpdate: onB, onAdd, onRemove, label = 'Bullet points (max 5)' }) => (
-    <Field label={label}>
-      <div className="flex flex-col gap-2">
-        {(bullets ?? []).map((bullet, i) => (
-          <div key={i} className="flex gap-2 items-start">
-            <span className="text-white/30 text-sm pt-2.5 flex-shrink-0">
-              {['①', '②', '③', '④', '⑤'][i]}
-            </span>
-            <input
-              type="text"
-              value={bullet}
-              onChange={(e) => onB(i, e.target.value)}
-              placeholder={`Point ${i + 1}...`}
-              className={inputCls}
-            />
-            <button
-              onClick={() => onRemove(i)}
-              className="text-white/20 hover:text-red-400 transition-colors mt-2.5 text-lg leading-none flex-shrink-0"
-            >×</button>
-          </div>
-        ))}
-        {(bullets ?? []).length < 5 && (
-          <button onClick={onAdd} className="text-white/30 hover:text-white/60 text-sm text-left transition-colors py-1">
-            + Add point
-          </button>
-        )}
-      </div>
-    </Field>
-  );
 
   return (
     <div className="w-80 flex-shrink-0 flex flex-col border-r border-white/8 overflow-hidden bg-black/20">

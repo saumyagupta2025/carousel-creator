@@ -4,6 +4,34 @@
  * profile pill left + double-chevron right, large item number on content slides.
  */
 
+import { useEffect, useRef } from 'react';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import python from 'highlight.js/lib/languages/python';
+import xml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import bash from 'highlight.js/lib/languages/bash';
+import json from 'highlight.js/lib/languages/json';
+import rust from 'highlight.js/lib/languages/rust';
+import go from 'highlight.js/lib/languages/go';
+import sql from 'highlight.js/lib/languages/sql';
+import 'highlight.js/styles/atom-one-dark.css';
+
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('html', xml);
+hljs.registerLanguage('jsx', javascript);
+hljs.registerLanguage('tsx', typescript);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('rust', rust);
+hljs.registerLanguage('go', go);
+hljs.registerLanguage('sql', sql);
+
 const W = 1080;
 const H = 1350;
 const PAD = 80;
@@ -106,6 +134,30 @@ function BottomBar({ authorName, profileImage, c }) {
   );
 }
 
+function CodeBlock({ code, language }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current && code) {
+      ref.current.removeAttribute('data-highlighted');
+      ref.current.textContent = code;
+      hljs.highlightElement(ref.current);
+    }
+  }, [code, language]);
+  return (
+    <pre style={{ margin: 0, borderRadius: 10, overflow: 'hidden', background: '#1e1e1e', border: '1px solid rgba(0,0,0,0.2)' }}>
+      <code
+        ref={ref}
+        className={`language-${language || 'javascript'}`}
+        style={{
+          display: 'block', padding: '32px 36px', fontSize: 26, lineHeight: 1.7,
+          fontFamily: '"Fira Code", "Cascadia Code", ui-monospace, monospace',
+          overflowX: 'hidden', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+        }}
+      />
+    </pre>
+  );
+}
+
 export default function TealCardSlide({ slide, slideNum, authorName, profileImage }) {
   const c = getColors(slideNum);
   const slideNumStr = String(slideNum).padStart(2, '0');
@@ -192,6 +244,148 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
           )}
         </div>
 
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD }}>
+          <DividerLine c={c} />
+          <BottomBar authorName={authorName} profileImage={profileImage} c={c} />
+        </div>
+      </div>
+    );
+  }
+
+  /* ── CTA ── */
+  if (slide.type === 'cta') {
+    return (
+      <div style={{ width: W, height: H, background: c.bg, position: 'relative', overflow: 'hidden', fontFamily: FONT }}>
+        <div style={{ position: 'absolute', top: PAD, right: PAD, fontFamily: FONT, fontWeight: 700, fontSize: 22, color: c.muted }}>{slideNumStr}</div>
+        <div style={{ position: 'absolute', top: PAD, left: PAD, right: PAD, bottom: PAD + 150, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 24 }}>
+          <h2 style={{ margin: 0, fontFamily: FONT, fontWeight: 800, fontSize: 92, lineHeight: 0.94, color: c.heading, textTransform: 'uppercase', letterSpacing: '-3px' }}>
+            {slide.heading || "Save this!"}
+          </h2>
+          {slide.body && <p style={{ margin: 0, fontFamily: FONT, fontSize: 30, lineHeight: 1.55, color: c.body, fontWeight: 400 }}>{slide.body}</p>}
+        </div>
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD }}>
+          <DividerLine c={c} />
+          <BottomBar authorName={authorName} profileImage={profileImage} c={c} />
+        </div>
+      </div>
+    );
+  }
+
+  /* ── DOUBLE LIST ── */
+  if (slide.type === 'doublelist') {
+    return (
+      <div style={{ width: W, height: H, background: c.bg, position: 'relative', overflow: 'hidden', fontFamily: FONT }}>
+        <div style={{ position: 'absolute', top: PAD, right: PAD, fontFamily: FONT, fontWeight: 700, fontSize: 22, color: c.muted }}>{slideNumStr}</div>
+        <div style={{ position: 'absolute', top: PAD + 16, left: PAD, right: PAD, bottom: PAD + 150, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 36 }}>
+          {/* Section 1 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {slide.subtitle && <div style={{ fontFamily: FONT, fontSize: 22, color: c.body, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{slide.subtitle}</div>}
+            <h2 style={{ margin: 0, fontFamily: FONT, fontWeight: 800, fontSize: 52, lineHeight: 1.06, color: c.heading, textTransform: 'uppercase', letterSpacing: '-1.5px' }}>{slide.heading}</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
+                <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ height: 1.5, background: c.line }} />
+          {/* Section 2 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {slide.ordinal2 && <div style={{ fontFamily: FONT, fontSize: 22, color: c.body, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{slide.ordinal2}</div>}
+            <h2 style={{ margin: 0, fontFamily: FONT, fontWeight: 800, fontSize: 52, lineHeight: 1.06, color: c.heading, textTransform: 'uppercase', letterSpacing: '-1.5px' }}>{slide.heading2 || ''}</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {(slide.bullets2 ?? []).filter(b => b?.trim()).map((b, i) => (
+                <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD }}>
+          <DividerLine c={c} />
+          <BottomBar authorName={authorName} profileImage={profileImage} c={c} />
+        </div>
+      </div>
+    );
+  }
+
+  /* ── PHOTO TOP + TEXT (imagetext) ── */
+  if (slide.type === 'imagetext') {
+    const imgH = 480;
+    return (
+      <div style={{ width: W, height: H, background: c.bg, position: 'relative', overflow: 'hidden', fontFamily: FONT }}>
+        <div style={{ position: 'absolute', top: PAD, right: PAD, fontFamily: FONT, fontWeight: 700, fontSize: 22, color: c.muted, zIndex: 2 }}>{slideNumStr}</div>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: imgH, overflow: 'hidden', background: c.pillBg }}>
+          {slide.imageUrl ? <img src={slide.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: c.muted, fontSize: 26, fontFamily: FONT }}>Upload Photo</div>}
+        </div>
+        <div style={{ position: 'absolute', top: imgH + 24, left: PAD, right: PAD, bottom: PAD + 150, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {slide.subtitle && <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 80, lineHeight: 1, color: c.numColor, letterSpacing: '-3px' }}>{slide.subtitle}</div>}
+          {slide.heading && <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 32, letterSpacing: '0.1em', textTransform: 'uppercase', color: c.heading, marginBottom: 8 }}>{slide.heading}</div>}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
+              <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD }}>
+          <DividerLine c={c} />
+          <BottomBar authorName={authorName} profileImage={profileImage} c={c} />
+        </div>
+      </div>
+    );
+  }
+
+  /* ── TEXT + SIDE IMAGE (textimage) ── */
+  if (slide.type === 'textimage') {
+    return (
+      <div style={{ width: W, height: H, background: c.bg, position: 'relative', overflow: 'hidden', fontFamily: FONT }}>
+        <div style={{ position: 'absolute', top: PAD, right: PAD, fontFamily: FONT, fontWeight: 700, fontSize: 22, color: c.muted }}>{slideNumStr}</div>
+        <div style={{ position: 'absolute', top: PAD + 16, left: PAD, right: PAD, bottom: PAD + 150, display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {slide.subtitle && <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 100, lineHeight: 1, color: c.numColor, letterSpacing: '-3px', marginBottom: -4 }}>{slide.subtitle}</div>}
+          {slide.heading && <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 32, letterSpacing: '0.1em', textTransform: 'uppercase', color: c.heading, marginBottom: 8 }}>{slide.heading}</div>}
+          <div style={{ display: 'flex', gap: 28, flex: 1, minHeight: 0 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
+                <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ width: 340, borderRadius: 8, overflow: 'hidden', background: c.pillBg, flexShrink: 0, alignSelf: 'stretch', border: `2px solid ${c.line}` }}>
+              {slide.imageUrl ? <img src={slide.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: c.muted, fontSize: 20, fontFamily: FONT }}>Upload Photo</div>}
+            </div>
+          </div>
+        </div>
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD }}>
+          <DividerLine c={c} />
+          <BottomBar authorName={authorName} profileImage={profileImage} c={c} />
+        </div>
+      </div>
+    );
+  }
+
+  /* ── CODE ── */
+  if (slide.type === 'code') {
+    return (
+      <div style={{ width: W, height: H, background: c.bg, position: 'relative', overflow: 'hidden', fontFamily: FONT }}>
+        <div style={{ position: 'absolute', top: PAD, right: PAD, fontFamily: FONT, fontWeight: 700, fontSize: 22, color: c.muted }}>{slideNumStr}</div>
+        <div style={{ position: 'absolute', top: PAD + 16, left: PAD, right: PAD, bottom: PAD + 150, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 22 }}>
+          {slide.heading && (
+            <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 34, letterSpacing: '0.08em', textTransform: 'uppercase', color: c.heading }}>
+              {slide.heading}
+            </div>
+          )}
+          <CodeBlock code={slide.code} language={slide.language} />
+          {slide.body && (
+            <p style={{ margin: 0, fontFamily: FONT, fontSize: 26, lineHeight: 1.6, color: c.body, fontWeight: 400 }}>{slide.body}</p>
+          )}
+        </div>
         <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD }}>
           <DividerLine c={c} />
           <BottomBar authorName={authorName} profileImage={profileImage} c={c} />

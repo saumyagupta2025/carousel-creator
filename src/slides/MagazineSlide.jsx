@@ -407,7 +407,7 @@ export default function MagazineSlide({ slide, slideNum, authorName, profileImag
       <div style={{ width: W, height: H, background: BG, position: 'relative', overflow: 'hidden', fontFamily: SANS }}>
         <div style={{
           position: 'absolute', top: PAD, left: PAD, right: PAD, bottom: PAD + 110,
-          display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 28,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 28,
         }}>
           <h2 style={{
             margin: 0, fontFamily: SERIF, fontWeight: 700,

@@ -1,63 +1,15 @@
-import DarkMinimalSlide from './DarkMinimalSlide';
-import WarmCreamSlide from './WarmCreamSlide';
+import StandardSlide, { THEMES } from './StandardSlide';
 import TealCardSlide from './TealCardSlide';
 import MagazineSlide from './MagazineSlide';
-import ThemedSlide, { PALETTES } from './ThemedSlide';
 
 export default function SlideRenderer({ slide, index, template, authorName, profileImage }) {
   const slideNum = index + 1;
+  const props = { slide, slideNum, authorName, profileImage };
 
-  if (template === 'tealcard') {
-    return (
-      <TealCardSlide
-        slide={slide}
-        slideNum={slideNum}
-        authorName={authorName}
-        profileImage={profileImage}
-      />
-    );
-  }
+  if (template === 'tealcard') return <TealCardSlide {...props} />;
+  if (template === 'magazine') return <MagazineSlide {...props} />;
 
-  if (template === 'magazine') {
-    return (
-      <MagazineSlide
-        slide={slide}
-        slideNum={slideNum}
-        authorName={authorName}
-        profileImage={profileImage}
-      />
-    );
-  }
-
-  if (PALETTES[template]) {
-    return (
-      <ThemedSlide
-        slide={slide}
-        slideNum={slideNum}
-        authorName={authorName}
-        profileImage={profileImage}
-        palette={PALETTES[template]}
-      />
-    );
-  }
-
-  if (template === 'warm') {
-    return (
-      <WarmCreamSlide
-        slide={slide}
-        slideNum={slideNum}
-        authorName={authorName}
-        profileImage={profileImage}
-      />
-    );
-  }
-
-  return (
-    <DarkMinimalSlide
-      slide={slide}
-      slideNum={slideNum}
-      authorName={authorName}
-      profileImage={profileImage}
-    />
-  );
+  // dark / warm / editorial all go through StandardSlide with a theme config
+  const theme = THEMES[template] ?? THEMES.dark;
+  return <StandardSlide {...props} theme={theme} />;
 }
