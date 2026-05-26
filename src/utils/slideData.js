@@ -5,6 +5,7 @@ export const SLIDE_TYPES = [
   { value: 'code', label: 'Code Snippet' },
   { value: 'longtext', label: 'Long Text' },
   { value: 'screenshot', label: 'Screenshot' },
+  { value: 'framed', label: 'Framed Screenshot' },
 ];
 
 export const CODE_LANGUAGES = [
@@ -82,6 +83,20 @@ export function createSlide(type = 'cover') {
       imageUrl: null,
       textAbove: '',
       caption: 'Caption text goes here',
+    },
+    framed: {
+      heading: '',
+      subtitle: '',
+      tag: '',
+      body: '',
+      bullets: [],
+      code: '',
+      language: 'javascript',
+      imageUrl: null,
+      textAbove: '',
+      caption: 'Caption goes here',
+      captionPosition: 'below',
+      imageSize: 75,
     },
   };
 

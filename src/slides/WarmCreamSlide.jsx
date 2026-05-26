@@ -243,6 +243,55 @@ function SlideContent({ slide }) {
 }
 
 export default function WarmCreamSlide({ slide, slideNum, authorName, profileImage }) {
+  if (slide.type === 'framed') {
+    const availableW = W - 2 * PAD;
+    const imgW = Math.round(availableW * ((slide.imageSize ?? 75) / 100));
+
+    return (
+      <div style={{ width: W, height: H, background: s.bg, position: 'relative', overflow: 'hidden', fontFamily: s.bodyFont }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: GRADIENT_H, background: GRADIENT }} />
+        <div style={{ position: 'absolute', top: PAD, right: PAD, width: s.squareSize, height: s.squareSize, background: s.squareBg, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+          <span style={{ color: '#fff', fontFamily: s.headingFont, fontWeight: 700, fontSize: 32, lineHeight: 1 }}>
+            {String(slideNum).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Content */}
+        <div style={{ position: 'absolute', top: PAD, left: PAD, right: PAD, bottom: PAD + 110, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 36 }}>
+          {slide.heading && (
+            <h2 style={{ margin: 0, width: '100%', fontFamily: s.headingFont, fontWeight: 700, fontSize: 56, lineHeight: 1.15, color: s.headingColor, letterSpacing: '-1px' }}>
+              {parseItalics(slide.heading)}
+            </h2>
+          )}
+          {slide.captionPosition === 'above' && slide.caption && (
+            <p style={{ margin: 0, width: '100%', fontFamily: s.bodyFont, fontSize: 30, lineHeight: 1.65, color: s.bodyColor, fontWeight: 400 }}>
+              {slide.caption}
+            </p>
+          )}
+          <div style={{ width: imgW, borderRadius: 16, overflow: 'hidden', border: '3px solid #c8b99a', boxShadow: '0 24px 64px rgba(0,0,0,0.18)', flexShrink: 0 }}>
+            {slide.imageUrl ? (
+              <img src={slide.imageUrl} alt="" style={{ width: '100%', display: 'block' }} />
+            ) : (
+              <div style={{ width: '100%', paddingTop: '62.5%', background: '#ede8e0', position: 'relative' }}>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb', fontSize: 36 }}>Upload an image</div>
+              </div>
+            )}
+          </div>
+          {(slide.captionPosition ?? 'below') === 'below' && slide.caption && (
+            <p style={{ margin: 0, width: '100%', fontFamily: s.bodyFont, fontSize: 30, lineHeight: 1.65, color: s.bodyColor, fontWeight: 400 }}>
+              {slide.caption}
+            </p>
+          )}
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD, borderTop: `1px solid ${s.borderColor}`, paddingTop: 24 }}>
+          <InstagramCTA authorName={authorName} profileImage={profileImage} />
+        </div>
+      </div>
+    );
+  }
+
   if (slide.type === 'screenshot') {
     return (
       <div style={{ width: W, height: H, background: s.bg, position: 'relative', overflow: 'hidden', fontFamily: s.bodyFont }}>

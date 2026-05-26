@@ -226,6 +226,58 @@ function SlideContent({ slide }) {
 }
 
 export default function DarkMinimalSlide({ slide, slideNum, authorName, profileImage }) {
+  if (slide.type === 'framed') {
+    const availableW = W - 2 * PAD;
+    const imgW = Math.round(availableW * ((slide.imageSize ?? 75) / 100));
+
+    return (
+      <div style={{ width: W, height: H, background: s.bg, boxShadow: '0 0 0 1px #222222', position: 'relative', overflow: 'hidden', fontFamily: s.bodyFont }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: GRADIENT_H, background: GRADIENT }} />
+        <div style={{ position: 'absolute', top: PAD, left: PAD, color: s.muted, fontSize: 26, fontFamily: s.bodyFont, fontWeight: 400, letterSpacing: '0.05em' }}>
+          {String(slideNum).padStart(2, '0')}
+        </div>
+
+        {/* Content */}
+        <div style={{ position: 'absolute', top: PAD + 60, left: PAD, right: PAD, bottom: PAD + 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 36 }}>
+          {slide.heading && (
+            <h2 style={{ margin: 0, width: '100%', fontFamily: s.headingFont, fontWeight: 700, fontSize: 56, lineHeight: 1.15, color: s.heading, letterSpacing: '-1px' }}>
+              {parseItalics(slide.heading)}
+            </h2>
+          )}
+          {slide.captionPosition === 'above' && slide.caption && (
+            <p style={{ margin: 0, width: '100%', fontFamily: s.bodyFont, fontSize: 30, lineHeight: 1.65, color: s.body, fontWeight: 400 }}>
+              {slide.caption}
+            </p>
+          )}
+          <div style={{ width: imgW, borderRadius: 16, overflow: 'hidden', border: '3px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 64px rgba(0,0,0,0.5)', flexShrink: 0 }}>
+            {slide.imageUrl ? (
+              <img src={slide.imageUrl} alt="" style={{ width: '100%', display: 'block' }} />
+            ) : (
+              <div style={{ width: '100%', paddingTop: '62.5%', background: '#1a1a2e', position: 'relative' }}>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333', fontSize: 36 }}>Upload an image</div>
+              </div>
+            )}
+          </div>
+          {(slide.captionPosition ?? 'below') === 'below' && slide.caption && (
+            <p style={{ margin: 0, width: '100%', fontFamily: s.bodyFont, fontSize: 30, lineHeight: 1.65, color: s.body, fontWeight: 400 }}>
+              {slide.caption}
+            </p>
+          )}
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{ position: 'absolute', bottom: PAD, left: PAD, right: PAD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {slide.tag ? (
+            <div style={{ border: `1px solid ${s.tagBorder}`, color: s.tagText, borderRadius: 999, padding: '9px 24px', fontSize: 22, fontFamily: s.bodyFont, fontWeight: 400 }}>
+              {slide.tag}
+            </div>
+          ) : <div />}
+          <InstagramCTA authorName={authorName} profileImage={profileImage} />
+        </div>
+      </div>
+    );
+  }
+
   if (slide.type === 'screenshot') {
     return (
       <div style={{ width: W, height: H, background: '#000', position: 'relative', overflow: 'hidden', fontFamily: s.bodyFont }}>

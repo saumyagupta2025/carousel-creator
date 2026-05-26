@@ -73,6 +73,76 @@ export default function EditorPanel({ slide, onUpdate }) {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
+        {/* Framed Screenshot */}
+        {slide.type === 'framed' && (
+          <>
+            <Field label="Heading" hint="optional">
+              <textarea
+                rows={2}
+                value={slide.heading ?? ''}
+                onChange={(e) => update('heading', e.target.value)}
+                placeholder="Optional title above image..."
+                className={inputCls}
+              />
+            </Field>
+            <Field label="Image">
+              <input ref={fileRef} type="file" accept="image/*" onChange={handleImageUpload} />
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="w-full bg-white/5 border border-dashed border-white/15 rounded-lg py-6 text-white/40 text-sm hover:border-white/25 hover:text-white/60 transition-colors"
+              >
+                {slide.imageUrl ? '✓ Image loaded — click to replace' : 'Click to upload image'}
+              </button>
+            </Field>
+            <Field label={`Image size — ${slide.imageSize ?? 75}%`}>
+              <input
+                type="range"
+                min={30}
+                max={100}
+                step={5}
+                value={slide.imageSize ?? 75}
+                onChange={(e) => update('imageSize', Number(e.target.value))}
+                className="w-full accent-blue-400"
+              />
+            </Field>
+            <Field label="Caption" hint="optional">
+              <textarea
+                rows={3}
+                value={slide.caption ?? ''}
+                onChange={(e) => update('caption', e.target.value)}
+                placeholder="Caption text..."
+                className={inputCls}
+              />
+            </Field>
+            <Field label="Caption position">
+              <div className="flex gap-2">
+                {[['above', '↑ Above'], ['below', '↓ Below']].map(([val, label]) => (
+                  <button
+                    key={val}
+                    onClick={() => update('captionPosition', val)}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
+                      (slide.captionPosition ?? 'below') === val
+                        ? 'bg-white/12 text-white border border-white/20'
+                        : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </Field>
+            <Field label="Tag / pill label">
+              <input
+                type="text"
+                value={slide.tag ?? ''}
+                onChange={(e) => update('tag', e.target.value)}
+                placeholder="Topic label..."
+                className={inputCls}
+              />
+            </Field>
+          </>
+        )}
+
         {/* Screenshot */}
         {slide.type === 'screenshot' && (
           <>

@@ -22,6 +22,7 @@ const TYPE_COLORS = {
   code: '#c084fc',
   longtext: '#fb923c',
   screenshot: '#f472b6',
+  framed: '#38bdf8',
 };
 
 function SortableItem({ slide, index, isSelected, onSelect, onDelete }) {
