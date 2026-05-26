@@ -234,24 +234,34 @@ export default function Sidebar({
               Teal
             </button>
             <button
-              onClick={() => setTemplate('neon')}
+              onClick={() => setTemplate('bold')}
               className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'neon'
-                  ? 'bg-lime-500/12 text-lime-300 border border-lime-400/25'
+                template === 'bold'
+                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-400/30'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
-              Neon
+              Bold
             </button>
             <button
               onClick={() => setTemplate('coral')}
-              className={`col-span-2 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`py-2 rounded-lg text-xs font-medium transition-all ${
                 template === 'coral'
                   ? 'bg-orange-500/12 text-orange-300 border border-orange-400/25'
                   : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
               }`}
             >
               Coral
+            </button>
+            <button
+              onClick={() => setTemplate('editorial')}
+              className={`col-span-2 py-2 rounded-lg text-xs font-medium transition-all ${
+                template === 'editorial'
+                  ? 'bg-stone-100/10 text-stone-200 border border-stone-300/20'
+                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
+              }`}
+            >
+              Editorial
             </button>
           </div>
         </div>
