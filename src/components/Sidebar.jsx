@@ -191,10 +191,10 @@ export default function Sidebar({
           <h1 className="text-white font-semibold text-sm tracking-wide">Carousel Creator</h1>
           <button
             onClick={() => importRef.current?.click()}
-            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-[10px] uppercase tracking-widest transition-colors"
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-white/15 rounded-lg px-3 py-1.5 text-white/80 text-xs font-medium transition-colors"
             title="Import carousel from generated JSON"
           >
-            ↑ Import
+            ↑ Import JSON
           </button>
           <input ref={importRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
         </div>
