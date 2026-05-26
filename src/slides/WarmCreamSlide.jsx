@@ -279,7 +279,7 @@ export default function WarmCreamSlide({ slide, slideNum, authorName, profileIma
   }
 
   return (
-    <div style={{ width: W, height: H, background: s.bg, position: 'relative', overflow: 'hidden', fontFamily: s.bodyFont, boxSizing: 'border-box' }}>
+    <div style={{ width: W, height: H, background: s.bg, position: 'relative', overflow: 'hidden', fontFamily: s.bodyFont }}>
       {/* Gradient accent line */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: GRADIENT_H, background: GRADIENT }} />
 
@@ -295,6 +295,7 @@ export default function WarmCreamSlide({ slide, slideNum, authorName, profileIma
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          zIndex: 1,
         }}
       >
         <span style={{ color: '#fff', fontFamily: s.headingFont, fontWeight: 700, fontSize: 32, lineHeight: 1 }}>
@@ -302,13 +303,13 @@ export default function WarmCreamSlide({ slide, slideNum, authorName, profileIma
         </span>
       </div>
 
-      {/* Main content */}
+      {/* Main content — full width, centered vertically */}
       <div
         style={{
           position: 'absolute',
-          top: PAD + GRADIENT_H,
+          top: PAD,
           left: PAD,
-          right: PAD + s.squareSize + 24,
+          right: PAD,
           bottom: PAD + 110,
           display: 'flex',
           flexDirection: 'column',
