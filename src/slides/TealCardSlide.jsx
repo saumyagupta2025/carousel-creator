@@ -283,8 +283,8 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
             <h2 style={{ margin: 0, fontFamily: FONT, fontWeight: 800, fontSize: 52, lineHeight: 1.06, color: c.heading, textTransform: 'uppercase', letterSpacing: '-1.5px' }}>{slide.heading}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
+                <div key={i} style={{ position: 'relative', paddingLeft: 24, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                  <span style={{ position: 'absolute', left: 0, top: 0, color: c.heading, fontWeight: 800 }}>•</span>{b}
                 </div>
               ))}
             </div>
@@ -296,8 +296,8 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
             <h2 style={{ margin: 0, fontFamily: FONT, fontWeight: 800, fontSize: 52, lineHeight: 1.06, color: c.heading, textTransform: 'uppercase', letterSpacing: '-1.5px' }}>{slide.heading2 || ''}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {(slide.bullets2 ?? []).filter(b => b?.trim()).map((b, i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
+                <div key={i} style={{ position: 'relative', paddingLeft: 24, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                  <span style={{ position: 'absolute', left: 0, top: 0, color: c.heading, fontWeight: 800 }}>•</span>{b}
                 </div>
               ))}
             </div>
@@ -351,8 +351,8 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
           <div style={{ display: 'flex', gap: 28, flex: 1, minHeight: 0 }}>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
               {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
+                <div key={i} style={{ position: 'relative', paddingLeft: 24, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
+                  <span style={{ position: 'absolute', left: 0, top: 0, color: c.heading, fontWeight: 800 }}>•</span>{b}
                 </div>
               ))}
             </div>
@@ -433,9 +433,9 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
         {hasBullets && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {slide.bullets.slice(0, 5).map((b, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 18, fontFamily: FONT, fontSize: 28, lineHeight: 1.55, color: c.body }}>
-                <span style={{ color: c.heading, fontWeight: 800, flexShrink: 0, fontSize: 22, marginTop: 4 }}>•</span>
-                <span style={{ fontWeight: 400 }}>{b}</span>
+              <div key={i} style={{ position: 'relative', paddingLeft: 26, fontFamily: FONT, fontSize: 28, lineHeight: 1.55, color: c.body }}>
+                <span style={{ position: 'absolute', left: 0, top: 4, color: c.heading, fontWeight: 800, fontSize: 22 }}>•</span>
+                {b}
               </div>
             ))}
           </div>

@@ -14,6 +14,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { createSlide, SLIDE_TYPES } from '../utils/slideData';
+import { generateCarousel } from '../utils/generateCarousel';
 
 const TYPE_COLORS = {
   cover:      '#6ee7b7',
@@ -124,6 +125,12 @@ export default function Sidebar({
   const profileInputRef = useRef(null);
   const importRef = useRef(null);
 
+  // AI generation state
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState('');
+
   function handleImport(e) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -146,6 +153,28 @@ export default function Sidebar({
       }
     };
     reader.readAsText(file);
+  }
+
+  async function handleGenerate() {
+    if (!aiTopic.trim() || aiLoading) return;
+    setAiLoading(true);
+    setAiError('');
+    try {
+      const carousel = await generateCarousel(aiTopic.trim());
+      const imported = carousel.slides.map((s) => ({
+        ...createSlide(s.type ?? 'text'),
+        ...s,
+        id: crypto.randomUUID(),
+      }));
+      setSlides(imported);
+      setSelectedId(imported[0]?.id ?? null);
+      setAiOpen(false);
+      setAiTopic('');
+    } catch (err) {
+      setAiError(err.message ?? 'Generation failed. Try again.');
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   function handleProfileUpload(e) {
@@ -201,6 +230,52 @@ export default function Sidebar({
             ↑ Import JSON
           </button>
           <input ref={importRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+        </div>
+
+        {/* ✨ Generate with AI */}
+        <div className="mb-4">
+          <button
+            onClick={() => { setAiOpen((o) => !o); setAiError(''); }}
+            className="w-full flex items-center justify-between bg-gradient-to-r from-violet-500/15 to-indigo-500/15 hover:from-violet-500/25 hover:to-indigo-500/25 border border-violet-400/25 hover:border-violet-400/40 rounded-lg px-3 py-2 text-violet-300 text-xs font-medium transition-all"
+          >
+            <span className="flex items-center gap-1.5">✨ Generate with AI</span>
+            <span className="text-violet-400/60 text-[10px]">{aiOpen ? '▲' : '▼'}</span>
+          </button>
+
+          {aiOpen && (
+            <div className="mt-2 flex flex-col gap-2">
+              <textarea
+                value={aiTopic}
+                onChange={(e) => setAiTopic(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleGenerate(); }}
+                placeholder="e.g. How transformers work, React hooks, Stoic philosophy, GTM strategy…"
+                rows={2}
+                disabled={aiLoading}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white/80 text-xs placeholder-white/25 focus:outline-none focus:border-violet-400/40 resize-none transition-colors disabled:opacity-50"
+              />
+              {aiError && (
+                <p className="text-red-400 text-[10px] leading-snug whitespace-pre-line">{aiError}</p>
+              )}
+              <button
+                onClick={handleGenerate}
+                disabled={aiLoading || !aiTopic.trim()}
+                className="w-full flex items-center justify-center gap-2 bg-violet-500/20 hover:bg-violet-500/30 disabled:opacity-40 disabled:cursor-not-allowed border border-violet-400/30 rounded-lg px-3 py-2 text-violet-200 text-xs font-medium transition-all"
+              >
+                {aiLoading ? (
+                  <>
+                    <svg className="animate-spin w-3 h-3" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    </svg>
+                    Generating…
+                  </>
+                ) : (
+                  'Generate carousel →'
+                )}
+              </button>
+              <p className="text-white/20 text-[9px] text-center">⌘↵ to generate · replaces current slides</p>
+            </div>
+          )}
         </div>
 
         {/* Template toggle */}

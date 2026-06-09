@@ -201,9 +201,12 @@ function Bullets({ items, theme, fontSize = 30, gap = 14 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap }}>
       {filtered.map((b, i) => (
-        <div key={i} style={{ display: 'flex', gap: 16, fontSize, lineHeight: 1.52, color: theme.body, fontFamily: theme.bodyFont }}>
-          <span style={{ color: theme.accent, flexShrink: 0, fontWeight: 700 }}>•</span>
-          <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
+        <div key={i} style={{
+          position: 'relative', paddingLeft: 28,
+          fontSize, lineHeight: 1.52, color: theme.body, fontFamily: theme.bodyFont,
+        }}>
+          <span style={{ position: 'absolute', left: 0, top: 0, color: theme.accent, fontWeight: 700, lineHeight: 1.52 }}>•</span>
+          {b}
         </div>
       ))}
     </div>
@@ -366,12 +369,12 @@ function SlideContent({ slide, theme }) {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {(slide.bullets ?? []).slice(0, 5).map((bullet, i) => (
               <div key={i} style={{
-                display: 'flex', alignItems: 'flex-start', gap: 20,
+                position: 'relative', paddingLeft: 52,
                 fontFamily: theme.bodyFont, fontSize: 32, lineHeight: 1.55, color: theme.body,
                 paddingTop: 17, paddingBottom: 17, borderBottom: `1px solid ${theme.border}`,
               }}>
-                <span style={{ color: theme.accent, fontWeight: 700, flexShrink: 0, fontSize: 32 }}>{BULLETS[i]}</span>
-                <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{bullet}</span>
+                <span style={{ position: 'absolute', left: 0, top: 17, color: theme.accent, fontWeight: 700, fontSize: 32, lineHeight: 1.55 }}>{BULLETS[i]}</span>
+                {bullet}
               </div>
             ))}
           </div>
