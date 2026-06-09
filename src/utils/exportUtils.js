@@ -20,13 +20,25 @@ async function renderToCanvas(slide, index, template, authorName, profileImage) 
     );
   });
 
+  // Explicitly wait for DM Sans and Fraunces to be fully available in the
+  // browser's FontFaceSet — document.fonts.ready can resolve early when
+  // font-display:swap is in use, leaving the canvas with incorrect metrics.
   await document.fonts.ready;
+  await Promise.allSettled([
+    document.fonts.load('400 32px "DM Sans"'),
+    document.fonts.load('600 32px "DM Sans"'),
+    document.fonts.load('700 32px Fraunces'),
+    document.fonts.load('700 32px "Plus Jakarta Sans"'),
+  ]);
   await new Promise((r) => setTimeout(r, 350));
 
-  const canvas = await html2canvas(container, {
+  // Render at 2× scale — html2canvas 1.4.1 miscalculates the advance width of
+  // the space glyph in some fonts (DM Sans) at scale:1, causing words to merge.
+  // Rendering at 2× corrects the metrics; we then downsample back to 1080×1350.
+  const hiDpiCanvas = await html2canvas(container, {
     width: 1080,
     height: 1350,
-    scale: 1,
+    scale: 2,
     useCORS: true,
     allowTaint: true,
     logging: false,
@@ -36,6 +48,12 @@ async function renderToCanvas(slide, index, template, authorName, profileImage) 
 
   root.unmount();
   document.body.removeChild(container);
+
+  // Downsample to 1080×1350 so file size stays reasonable
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1350;
+  canvas.getContext('2d').drawImage(hiDpiCanvas, 0, 0, 1080, 1350);
 
   return canvas;
 }
