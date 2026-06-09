@@ -203,7 +203,7 @@ function Bullets({ items, theme, fontSize = 30, gap = 14 }) {
       {filtered.map((b, i) => (
         <div key={i} style={{ display: 'flex', gap: 16, fontSize, lineHeight: 1.52, color: theme.body, fontFamily: theme.bodyFont }}>
           <span style={{ color: theme.accent, flexShrink: 0, fontWeight: 700 }}>•</span>
-          <span>{b}</span>
+          <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
         </div>
       ))}
     </div>
@@ -336,6 +336,7 @@ function SlideContent({ slide, theme }) {
             <p style={{
               margin: '0 0 32px', fontFamily: theme.bodyFont, fontSize: 30,
               lineHeight: 1.62, color: theme.muted, fontWeight: 300, fontStyle: 'italic',
+              whiteSpace: 'pre-wrap', wordBreak: 'break-word',
             }}>{slide.body}</p>
           )}
           {/* Short accent rule */}
@@ -351,7 +352,7 @@ function SlideContent({ slide, theme }) {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 34 }}>
           {slide.heading && <h2 style={H1(60)}>{parseFormatting(slide.heading, theme.accent)}</h2>}
-          <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 32, lineHeight: 1.84, color: theme.body, fontWeight: 400 }}>{slide.body}</p>
+          <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 32, lineHeight: 1.84, color: theme.body, fontWeight: 400, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{slide.body}</p>
         </div>
       );
 
@@ -370,7 +371,7 @@ function SlideContent({ slide, theme }) {
                 paddingTop: 17, paddingBottom: 17, borderBottom: `1px solid ${theme.border}`,
               }}>
                 <span style={{ color: theme.accent, fontWeight: 700, flexShrink: 0, fontSize: 32 }}>{BULLETS[i]}</span>
-                <span>{bullet}</span>
+                <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{bullet}</span>
               </div>
             ))}
           </div>

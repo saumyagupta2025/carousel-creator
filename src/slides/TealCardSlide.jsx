@@ -284,7 +284,7 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
                 <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
                 </div>
               ))}
             </div>
@@ -297,7 +297,7 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {(slide.bullets2 ?? []).filter(b => b?.trim()).map((b, i) => (
                 <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
                 </div>
               ))}
             </div>
@@ -327,7 +327,7 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
               </div>
             ))}
           </div>
@@ -352,7 +352,7 @@ export default function TealCardSlide({ slide, slideNum, authorName, profileImag
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
               {(slide.bullets ?? []).filter(b => b?.trim()).map((b, i) => (
                 <div key={i} style={{ display: 'flex', gap: 14, fontSize: 26, lineHeight: 1.5, color: c.body, fontFamily: FONT }}>
-                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span>{b}</span>
+                  <span style={{ color: c.heading, flexShrink: 0, fontWeight: 800 }}>•</span><span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
                 </div>
               ))}
             </div>

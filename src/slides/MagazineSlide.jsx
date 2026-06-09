@@ -83,7 +83,7 @@ function Bullets({ items, compact = false }) {
       {filtered.map((b, i) => (
         <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, fontFamily: SANS, fontSize: compact ? 23 : 26, lineHeight: 1.52, color: '#3a3a3a' }}>
           <span style={{ color: BLACK, flexShrink: 0, fontSize: compact ? 14 : 16, marginTop: compact ? 5 : 6, fontWeight: 600 }}>•</span>
-          <span>{b}</span>
+          <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{b}</span>
         </div>
       ))}
     </div>
