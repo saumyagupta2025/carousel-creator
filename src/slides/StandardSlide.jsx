@@ -157,11 +157,16 @@ export const THEMES = {
 
 // ─── SHARED UTILITIES ─────────────────────────────────────────────────────────
 
-function parseItalics(text, color) {
+function parseFormatting(text, color) {
   if (!text) return null;
-  return text.split(/(\*[^*]+\*)/).map((seg, i) => {
+  // Order matters: match **bold** before *italic* to avoid false partial matches
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|__[^_]+__)/).map((seg, i) => {
+    if (seg.startsWith('**') && seg.endsWith('**'))
+      return <strong key={i} style={{ fontWeight: 800 }}>{seg.slice(2, -2)}</strong>;
     if (seg.startsWith('*') && seg.endsWith('*'))
       return <em key={i} style={{ fontStyle: 'italic', color }}>{seg.slice(1, -1)}</em>;
+    if (seg.startsWith('__') && seg.endsWith('__'))
+      return <span key={i} style={{ textDecoration: 'underline' }}>{seg.slice(2, -2)}</span>;
     return seg || null;
   });
 }
@@ -307,7 +312,7 @@ function SlideContent({ slide, theme }) {
             </div>
           )}
           <h1 style={H1(90, { letterSpacing: '-2.5px', lineHeight: 1.03 })}>
-            {parseItalics(slide.heading, theme.accent)}
+            {parseFormatting(slide.heading, theme.accent)}
           </h1>
           {slide.subtitle && (
             <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 33, lineHeight: 1.56, color: theme.body, fontWeight: 300 }}>
@@ -319,16 +324,33 @@ function SlideContent({ slide, theme }) {
 
     case 'text':
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
-          <h2 style={H1(68)}>{parseItalics(slide.heading, theme.accent)}</h2>
-          {slide.body && <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 33, lineHeight: 1.7, color: theme.body, fontWeight: 400 }}>{slide.body}</p>}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {/* Decorative large opening quote */}
+          <div style={{
+            fontFamily: theme.headingFont, fontSize: 180, lineHeight: 0.75,
+            color: theme.accent, opacity: 0.18, fontWeight: 700,
+            marginBottom: 8, userSelect: 'none',
+          }}>"</div>
+          {/* Intro / context line — lighter, italic, shows first */}
+          {slide.body && (
+            <p style={{
+              margin: '0 0 32px', fontFamily: theme.bodyFont, fontSize: 30,
+              lineHeight: 1.62, color: theme.muted, fontWeight: 300, fontStyle: 'italic',
+            }}>{slide.body}</p>
+          )}
+          {/* Short accent rule */}
+          <div style={{ width: 56, height: 3, background: theme.accent, borderRadius: 2, marginBottom: 28 }} />
+          {/* Bold statement — the punchline */}
+          <h2 style={H1(72, { lineHeight: 1.08 })}>
+            {parseFormatting(slide.heading, theme.accent)}
+          </h2>
         </div>
       );
 
     case 'longtext':
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 34 }}>
-          {slide.heading && <h2 style={H1(60)}>{parseItalics(slide.heading, theme.accent)}</h2>}
+          {slide.heading && <h2 style={H1(60)}>{parseFormatting(slide.heading, theme.accent)}</h2>}
           <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 32, lineHeight: 1.84, color: theme.body, fontWeight: 400 }}>{slide.body}</p>
         </div>
       );
@@ -336,7 +358,10 @@ function SlideContent({ slide, theme }) {
     case 'list':
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
-          <h2 style={H1(60)}>{parseItalics(slide.heading, theme.accent)}</h2>
+          {slide.subtitle && (
+            <div style={{ color: theme.muted, fontSize: 22, fontFamily: theme.bodyFont, fontWeight: 500, letterSpacing: '0.04em' }}>{slide.subtitle}</div>
+          )}
+          <h2 style={H1(60)}>{parseFormatting(slide.heading, theme.accent)}</h2>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {(slide.bullets ?? []).slice(0, 5).map((bullet, i) => (
               <div key={i} style={{
@@ -357,13 +382,13 @@ function SlideContent({ slide, theme }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {slide.subtitle && <div style={{ color: theme.muted, fontSize: 20, fontFamily: theme.bodyFont }}>{slide.subtitle}</div>}
-            <h2 style={H1(52)}>{parseItalics(slide.heading, theme.accent)}</h2>
+            <h2 style={H1(52)}>{parseFormatting(slide.heading, theme.accent)}</h2>
             <Bullets items={slide.bullets} theme={theme} fontSize={28} gap={12} />
           </div>
           <div style={{ height: 1, background: theme.border }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {slide.ordinal2 && <div style={{ color: theme.muted, fontSize: 20, fontFamily: theme.bodyFont }}>{slide.ordinal2}</div>}
-            <h2 style={H1(52)}>{parseItalics(slide.heading2 || '', theme.accent)}</h2>
+            <h2 style={H1(52)}>{parseFormatting(slide.heading2 || '', theme.accent)}</h2>
             <Bullets items={slide.bullets2} theme={theme} fontSize={28} gap={12} />
           </div>
         </div>
@@ -372,7 +397,7 @@ function SlideContent({ slide, theme }) {
     case 'code':
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-          {slide.heading && <h2 style={H1(54)}>{parseItalics(slide.heading, theme.accent)}</h2>}
+          {slide.heading && <h2 style={H1(54)}>{parseFormatting(slide.heading, theme.accent)}</h2>}
           <CodeBlock code={slide.code} language={slide.language} theme={theme} />
           {slide.body && <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 29, lineHeight: 1.7, color: theme.body }}>{slide.body}</p>}
         </div>
@@ -382,7 +407,7 @@ function SlideContent({ slide, theme }) {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 26, alignItems: 'center', textAlign: 'center' }}>
           <h2 style={H1(84, { letterSpacing: '-2.5px', lineHeight: 1.0 })}>
-            {parseItalics(slide.heading || "Save this post if it's helpful!", theme.accent)}
+            {parseFormatting(slide.heading || "Save this post if it's helpful!", theme.accent)}
           </h2>
           {slide.body && (
             <p style={{ margin: 0, fontFamily: theme.bodyFont, fontSize: 33, lineHeight: 1.5, color: theme.body, fontWeight: 300 }}>{slide.body}</p>
@@ -433,7 +458,7 @@ function ImageTextSlide({ slide, authorName, profileImage, theme }) {
       <div style={{ position: 'absolute', top: imgH + 30, left: PAD, right: PAD, bottom: PAD + 110, display: 'flex', flexDirection: 'column', gap: 18 }}>
         {slide.subtitle && <div style={{ color: theme.muted, fontSize: 20, fontFamily: theme.bodyFont }}>{slide.subtitle}</div>}
         <h2 style={{ margin: 0, fontFamily: theme.headingFont, fontWeight: theme.headingWeight, fontSize: 56, lineHeight: 1.08, color: theme.heading, letterSpacing: '-1.5px' }}>
-          {parseItalics(slide.heading, theme.accent)}
+          {parseFormatting(slide.heading, theme.accent)}
         </h2>
         <Bullets items={slide.bullets} theme={theme} fontSize={28} gap={12} />
       </div>
@@ -453,7 +478,7 @@ function TextImageSlide({ slide, slideNum, authorName, profileImage, theme }) {
       <div style={{ position: 'absolute', top: theme.contentTop, left: PAD, right: PAD, bottom: PAD + 110, display: 'flex', flexDirection: 'column', gap: 22 }}>
         {slide.subtitle && <div style={{ color: theme.muted, fontSize: 20, fontFamily: theme.bodyFont }}>{slide.subtitle}</div>}
         <h2 style={{ margin: 0, fontFamily: theme.headingFont, fontWeight: theme.headingWeight, fontSize: 58, lineHeight: 1.08, color: theme.heading, letterSpacing: '-1.5px' }}>
-          {parseItalics(slide.heading, theme.accent)}
+          {parseFormatting(slide.heading, theme.accent)}
         </h2>
         <div style={{ display: 'flex', gap: 28, flex: 1, minHeight: 0 }}>
           <div style={{ flex: 1 }}>
@@ -485,7 +510,7 @@ function FramedSlide({ slide, slideNum, authorName, profileImage, theme }) {
       <div style={{ position: 'absolute', top: theme.contentTop, left: PAD, right: PAD, bottom: PAD + 110, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 30 }}>
         {slide.heading && (
           <h2 style={{ margin: 0, width: '100%', fontFamily: theme.headingFont, fontWeight: theme.headingWeight, fontSize: 54, lineHeight: 1.12, color: theme.heading, letterSpacing: '-1px' }}>
-            {parseItalics(slide.heading, theme.accent)}
+            {parseFormatting(slide.heading, theme.accent)}
           </h2>
         )}
         {slide.captionPosition === 'above' && slide.caption && (

@@ -5,7 +5,7 @@ function Field({ label, hint, children }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-baseline gap-2">
-        <label className="text-white/50 text-[10px] uppercase tracking-widest">{label}</label>
+        <label className="text-white/50 text-xs uppercase tracking-widest">{label}</label>
         {hint && <span className="text-white/25 text-[10px]">{hint}</span>}
       </div>
       {children}
@@ -14,10 +14,42 @@ function Field({ label, hint, children }) {
 }
 
 const inputCls =
-  'w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white/80 text-sm placeholder-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none';
+  'w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white/80 text-[15px] placeholder-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none';
 
-// ⚠️ Must be defined OUTSIDE EditorPanel — defining it inside causes React to treat
-// it as a new component type on every render, which unmounts inputs mid-keystroke.
+const formatBtnCls =
+  'text-white/35 hover:text-white/80 bg-white/5 hover:bg-white/10 border border-white/10 rounded px-2 py-0.5 text-xs transition-colors leading-none select-none';
+
+// ⚠️ Must be defined OUTSIDE EditorPanel — defining inside causes re-mount on every render.
+function RichTextArea({ value, onChange, rows, placeholder, className }) {
+  const ref = useRef(null);
+
+  function applyFormat(e, open, close) {
+    e.preventDefault(); // keep textarea focus + selection
+    const el = ref.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const selected = value.slice(start, end) || 'text';
+    const newValue = value.slice(0, start) + open + selected + close + value.slice(end);
+    onChange({ target: { value: newValue } });
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + open.length, start + open.length + selected.length);
+    });
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex gap-1">
+        <button onMouseDown={(e) => applyFormat(e, '**', '**')} className={`${formatBtnCls} font-bold`} title="Bold">B</button>
+        <button onMouseDown={(e) => applyFormat(e, '*', '*')} className={`${formatBtnCls} italic`} title="Italic">I</button>
+        <button onMouseDown={(e) => applyFormat(e, '__', '__')} className={`${formatBtnCls} underline`} title="Underline">U</button>
+      </div>
+      <textarea ref={ref} value={value} onChange={onChange} rows={rows} placeholder={placeholder} className={className} />
+    </div>
+  );
+}
+
 function BulletsEditor({ bullets, onUpdate: onB, onAdd, onRemove, label = 'Bullet points (max 5)' }) {
   return (
     <Field label={label}>
@@ -118,10 +150,10 @@ export default function EditorPanel({ slide, onUpdate }) {
         {/* ── COVER ── */}
         {slide.type === 'cover' && (<>
           <Field label="Title">
-            <textarea rows={3} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Your big title..." className={inputCls} />
+            <RichTextArea rows={3} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Your big title..." className={inputCls} />
           </Field>
           <Field label="Subtitle" hint="appears right-indented">
-            <textarea rows={3} value={slide.subtitle} onChange={(e) => update('subtitle', e.target.value)} placeholder="A supporting subtitle..." className={inputCls} />
+            <RichTextArea rows={3} value={slide.subtitle} onChange={(e) => update('subtitle', e.target.value)} placeholder="A supporting subtitle..." className={inputCls} />
           </Field>
           <Field label="Series label" hint="shown at top-left on all slides">
             <input type="text" value={slide.tag ?? ''} onChange={(e) => update('tag', e.target.value)} placeholder="e.g. LESSONS FROM BURNOUT" className={inputCls} />
@@ -134,10 +166,10 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="text" value={slide.tag ?? ''} onChange={(e) => update('tag', e.target.value)} placeholder="e.g. LESSONS FROM BURNOUT" className={inputCls} />
           </Field>
           <Field label="Intro text" hint="appears lighter, above heading">
-            <textarea rows={3} value={slide.body ?? ''} onChange={(e) => update('body', e.target.value)} placeholder="e.g. Burnout taught me one thing:" className={inputCls} />
+            <RichTextArea rows={3} value={slide.body ?? ''} onChange={(e) => update('body', e.target.value)} placeholder="e.g. Burnout taught me one thing:" className={inputCls} />
           </Field>
           <Field label="Bold statement">
-            <textarea rows={3} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="e.g. Boundaries aren't optional" className={inputCls} />
+            <RichTextArea rows={3} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="e.g. Boundaries aren't optional" className={inputCls} />
           </Field>
         </>)}
 
@@ -147,7 +179,7 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="text" value={slide.tag ?? ''} onChange={(e) => update('tag', e.target.value)} placeholder="e.g. LESSONS FROM BURNOUT" className={inputCls} />
           </Field>
           <Field label="Statement" hint="will be very large">
-            <textarea rows={4} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Here are 5 that changed everything!" className={inputCls} />
+            <RichTextArea rows={4} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Here are 5 that changed everything!" className={inputCls} />
           </Field>
         </>)}
 
@@ -160,7 +192,7 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="text" value={slide.subtitle ?? ''} onChange={(e) => update('subtitle', e.target.value)} placeholder="e.g. One" className={inputCls} />
           </Field>
           <Field label="Section heading">
-            <textarea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Define Work Hours" className={inputCls} />
+            <RichTextArea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Define Work Hours" className={inputCls} />
           </Field>
           <BulletsEditor bullets={slide.bullets} onUpdate={updateBullet} onAdd={addBullet} onRemove={removeBullet} />
         </>)}
@@ -176,7 +208,7 @@ export default function EditorPanel({ slide, onUpdate }) {
               <input type="text" value={slide.subtitle ?? ''} onChange={(e) => update('subtitle', e.target.value)} placeholder="e.g. Two" className={inputCls} />
             </Field>
             <Field label="Heading">
-              <textarea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Protect Deep Focus" className={inputCls} />
+              <RichTextArea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Protect Deep Focus" className={inputCls} />
             </Field>
             <BulletsEditor bullets={slide.bullets} onUpdate={updateBullet} onAdd={addBullet} onRemove={removeBullet} label="Bullets" />
           </div>
@@ -186,7 +218,7 @@ export default function EditorPanel({ slide, onUpdate }) {
               <input type="text" value={slide.ordinal2 ?? ''} onChange={(e) => update('ordinal2', e.target.value)} placeholder="e.g. Three" className={inputCls} />
             </Field>
             <Field label="Heading">
-              <textarea rows={2} value={slide.heading2 ?? ''} onChange={(e) => update('heading2', e.target.value)} placeholder="Limit Meetings" className={inputCls} />
+              <RichTextArea rows={2} value={slide.heading2 ?? ''} onChange={(e) => update('heading2', e.target.value)} placeholder="Limit Meetings" className={inputCls} />
             </Field>
             <BulletsEditor bullets={slide.bullets2} onUpdate={updateBullet2} onAdd={addBullet2} onRemove={removeBullet2} label="Bullets" />
           </div>
@@ -207,7 +239,7 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="text" value={slide.subtitle ?? ''} onChange={(e) => update('subtitle', e.target.value)} placeholder="e.g. Four" className={inputCls} />
           </Field>
           <Field label="Section heading">
-            <textarea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Build Device-Free Zone" className={inputCls} />
+            <RichTextArea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Build Device-Free Zone" className={inputCls} />
           </Field>
           <BulletsEditor bullets={slide.bullets} onUpdate={updateBullet} onAdd={addBullet} onRemove={removeBullet} />
         </>)}
@@ -221,7 +253,7 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="text" value={slide.subtitle ?? ''} onChange={(e) => update('subtitle', e.target.value)} placeholder="e.g. Five" className={inputCls} />
           </Field>
           <Field label="Section heading">
-            <textarea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Recharge Without Guilt" className={inputCls} />
+            <RichTextArea rows={2} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Recharge Without Guilt" className={inputCls} />
           </Field>
           <BulletsEditor bullets={slide.bullets} onUpdate={updateBullet} onAdd={addBullet} onRemove={removeBullet} />
           <Field label="Side photo">
@@ -235,7 +267,7 @@ export default function EditorPanel({ slide, onUpdate }) {
         {/* ── CTA ── */}
         {slide.type === 'cta' && (<>
           <Field label="Main CTA text">
-            <textarea rows={3} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Save this post if it's helpful!" className={inputCls} />
+            <RichTextArea rows={3} value={slide.heading} onChange={(e) => update('heading', e.target.value)} placeholder="Save this post if it's helpful!" className={inputCls} />
           </Field>
           <Field label="Secondary line">
             <input type="text" value={slide.body ?? ''} onChange={(e) => update('body', e.target.value)} placeholder="Follow for more tips!" className={inputCls} />
@@ -245,7 +277,7 @@ export default function EditorPanel({ slide, onUpdate }) {
         {/* ── FRAMED IMAGE ── */}
         {slide.type === 'framed' && (<>
           <Field label="Heading" hint="optional">
-            <textarea rows={2} value={slide.heading ?? ''} onChange={(e) => update('heading', e.target.value)} placeholder="Optional title..." className={inputCls} />
+            <RichTextArea rows={2} value={slide.heading ?? ''} onChange={(e) => update('heading', e.target.value)} placeholder="Optional title..." className={inputCls} />
           </Field>
           <Field label="Image">
             <input ref={fileRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -257,7 +289,7 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="range" min={30} max={100} step={5} value={slide.imageSize ?? 75} onChange={(e) => update('imageSize', Number(e.target.value))} className="w-full accent-blue-400" />
           </Field>
           <Field label="Caption" hint="optional">
-            <textarea rows={3} value={slide.caption ?? ''} onChange={(e) => update('caption', e.target.value)} placeholder="Caption text..." className={inputCls} />
+            <RichTextArea rows={3} value={slide.caption ?? ''} onChange={(e) => update('caption', e.target.value)} placeholder="Caption text..." className={inputCls} />
           </Field>
           <Field label="Series label">
             <input type="text" value={slide.tag ?? ''} onChange={(e) => update('tag', e.target.value)} placeholder="Topic label..." className={inputCls} />
@@ -267,7 +299,7 @@ export default function EditorPanel({ slide, onUpdate }) {
         {/* ── SCREENSHOT ── */}
         {slide.type === 'screenshot' && (<>
           <Field label="Text above image">
-            <textarea rows={3} value={slide.textAbove ?? ''} onChange={(e) => update('textAbove', e.target.value)} placeholder="Text overlaid at top..." className={inputCls} />
+            <RichTextArea rows={3} value={slide.textAbove ?? ''} onChange={(e) => update('textAbove', e.target.value)} placeholder="Text overlaid at top..." className={inputCls} />
           </Field>
           <Field label="Image">
             <input ref={fileRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -276,14 +308,14 @@ export default function EditorPanel({ slide, onUpdate }) {
             </button>
           </Field>
           <Field label="Text below image">
-            <textarea rows={3} value={slide.caption ?? ''} onChange={(e) => update('caption', e.target.value)} placeholder="Caption at bottom..." className={inputCls} />
+            <RichTextArea rows={3} value={slide.caption ?? ''} onChange={(e) => update('caption', e.target.value)} placeholder="Caption at bottom..." className={inputCls} />
           </Field>
         </>)}
 
         {/* ── CODE ── */}
         {slide.type === 'code' && (<>
           <Field label="Heading" hint="optional">
-            <textarea rows={2} value={slide.heading ?? ''} onChange={(e) => update('heading', e.target.value)} placeholder="Code example title..." className={inputCls} />
+            <RichTextArea rows={2} value={slide.heading ?? ''} onChange={(e) => update('heading', e.target.value)} placeholder="Code example title..." className={inputCls} />
           </Field>
           <Field label="Language">
             <select value={slide.language} onChange={(e) => update('language', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white/80 text-sm focus:outline-none focus:border-white/25 cursor-pointer">
@@ -296,7 +328,7 @@ export default function EditorPanel({ slide, onUpdate }) {
             <textarea rows={12} value={slide.code ?? ''} onChange={(e) => update('code', e.target.value)} placeholder="// Your code here..." className={`${inputCls} font-mono text-xs`} spellCheck={false} />
           </Field>
           <Field label="Description" hint="optional — shown below code">
-            <textarea rows={3} value={slide.body ?? ''} onChange={(e) => update('body', e.target.value)} placeholder="Explain what this code does..." className={inputCls} />
+            <RichTextArea rows={3} value={slide.body ?? ''} onChange={(e) => update('body', e.target.value)} placeholder="Explain what this code does..." className={inputCls} />
           </Field>
           <Field label="Tag / label">
             <input type="text" value={slide.tag ?? ''} onChange={(e) => update('tag', e.target.value)} placeholder="Topic label..." className={inputCls} />

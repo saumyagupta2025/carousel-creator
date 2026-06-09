@@ -6,9 +6,11 @@ import { flushSync } from 'react-dom';
 import SlideRenderer from '../slides/SlideRenderer';
 
 async function renderToCanvas(slide, index, template, authorName, profileImage) {
+  // Must be at (0,0) — html2canvas crops at getBoundingClientRect(), so
+  // position:fixed;left:-9999px produces a blank image (crop origin is off-screen).
   const container = document.createElement('div');
   container.style.cssText =
-    'position:fixed;left:-9999px;top:0;width:1080px;height:1350px;overflow:hidden;';
+    'position:fixed;top:0;left:0;width:1080px;height:1350px;overflow:hidden;z-index:2147483647;pointer-events:none;';
   document.body.appendChild(container);
 
   const root = createRoot(container);
@@ -19,7 +21,7 @@ async function renderToCanvas(slide, index, template, authorName, profileImage) 
   });
 
   await document.fonts.ready;
-  await new Promise((r) => setTimeout(r, 300));
+  await new Promise((r) => setTimeout(r, 350));
 
   const canvas = await html2canvas(container, {
     width: 1080,
@@ -28,7 +30,8 @@ async function renderToCanvas(slide, index, template, authorName, profileImage) 
     useCORS: true,
     allowTaint: true,
     logging: false,
-    backgroundColor: null,
+    scrollX: 0,
+    scrollY: 0,
   });
 
   root.unmount();
