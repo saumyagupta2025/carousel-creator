@@ -5,7 +5,7 @@ import { exportSingleSlide, exportAllSlides } from '../utils/exportUtils';
 const PREVIEW_SCALE = 0.40; // 1080×0.4 = 432px, 1350×0.4 = 540px (integer)
 const THUMB_SCALE = 0.13;   // 1080×0.13 ≈ 140px, 1350×0.13 ≈ 176px
 
-function ScaledSlide({ slide, index, template, authorName, profileImage, scale }) {
+function ScaledSlide({ slide, index, template, authorName, profileImage, headingFont, scale }) {
   const w = Math.round(1080 * scale);
   const h = Math.round(1350 * scale);
   return (
@@ -30,6 +30,7 @@ function ScaledSlide({ slide, index, template, authorName, profileImage, scale }
           template={template}
           authorName={authorName}
           profileImage={profileImage}
+          headingFont={headingFont}
         />
       </div>
     </div>
@@ -43,6 +44,7 @@ export default function PreviewPanel({
   template,
   authorName,
   profileImage,
+  headingFont,
 }) {
   const [exporting, setExporting] = useState(false);
   const [exportingAll, setExportingAll] = useState(false);
@@ -54,7 +56,7 @@ export default function PreviewPanel({
     if (!selectedSlide) return;
     setExporting(true);
     try {
-      await exportSingleSlide(selectedSlide, selectedIndex, template, authorName, profileImage);
+      await exportSingleSlide(selectedSlide, selectedIndex, template, authorName, profileImage, headingFont);
     } finally {
       setExporting(false);
     }
@@ -64,7 +66,7 @@ export default function PreviewPanel({
     if (!slides.length) return;
     setExportingAll(true);
     try {
-      await exportAllSlides(slides, template, authorName, profileImage);
+      await exportAllSlides(slides, template, authorName, profileImage, headingFont);
     } finally {
       setExportingAll(false);
     }
@@ -100,6 +102,7 @@ export default function PreviewPanel({
                 template={template}
                 authorName={authorName}
                 profileImage={profileImage}
+                headingFont={headingFont}
                 scale={PREVIEW_SCALE}
               />
             </div>
@@ -147,6 +150,7 @@ export default function PreviewPanel({
                   template={template}
                   authorName={authorName}
                   profileImage={profileImage}
+                  headingFont={headingFont}
                   scale={THUMB_SCALE}
                 />
               </div>

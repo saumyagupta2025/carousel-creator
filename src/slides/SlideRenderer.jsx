@@ -1,15 +1,15 @@
 import StandardSlide, { THEMES } from './StandardSlide';
 import TealCardSlide from './TealCardSlide';
-import MagazineSlide from './MagazineSlide';
 
-export default function SlideRenderer({ slide, index, template, authorName, profileImage }) {
+export default function SlideRenderer({ slide, index, template, authorName, profileImage, headingFont }) {
   const slideNum = index + 1;
   const props = { slide, slideNum, authorName, profileImage };
 
   if (template === 'tealcard') return <TealCardSlide {...props} />;
-  if (template === 'magazine') return <MagazineSlide {...props} />;
 
-  // dark / warm / editorial all go through StandardSlide with a theme config
-  const theme = THEMES[template] ?? THEMES.dark;
+  // dark / warm / editorial / mocha / blush / sage / lavender → StandardSlide.
+  // A chosen heading font (optional) overrides the theme's default.
+  const base = THEMES[template] ?? THEMES.dark;
+  const theme = headingFont ? { ...base, headingFont } : base;
   return <StandardSlide {...props} theme={theme} />;
 }

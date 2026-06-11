@@ -23,5 +23,18 @@ import '@fontsource/sora/400.css'
 import '@fontsource/sora/600.css'
 import '@fontsource/sora/700.css'
 import '@fontsource/sora/800.css'
+// Serif options
+import '@fontsource/playfair-display/600.css'
+import '@fontsource/playfair-display/700.css'
+import '@fontsource/playfair-display/800.css'
+import '@fontsource/lora/500.css'
+import '@fontsource/lora/600.css'
+import '@fontsource/lora/700.css'
+// Cursive / script options
+import '@fontsource/caveat/600.css'
+import '@fontsource/caveat/700.css'
+import '@fontsource/dancing-script/600.css'
+import '@fontsource/dancing-script/700.css'
+import '@fontsource/pacifico/400.css'
 
 createRoot(document.getElementById('root')).render(<App />)

@@ -44,6 +44,7 @@ function RichTextArea({ value, onChange, rows, placeholder, className }) {
         <button onMouseDown={(e) => applyFormat(e, '**', '**')} className={`${formatBtnCls} font-bold`} title="Bold">B</button>
         <button onMouseDown={(e) => applyFormat(e, '*', '*')} className={`${formatBtnCls} italic`} title="Italic">I</button>
         <button onMouseDown={(e) => applyFormat(e, '__', '__')} className={`${formatBtnCls} underline`} title="Underline">U</button>
+        <button onMouseDown={(e) => applyFormat(e, '==', '==')} className={formatBtnCls} title="Highlight box (==text==)">▰</button>
       </div>
       <textarea ref={ref} value={value} onChange={onChange} rows={rows} placeholder={placeholder} className={className} />
     </div>
@@ -82,9 +83,14 @@ function BulletsEditor({ bullets, onUpdate: onB, onAdd, onRemove, label = 'Bulle
   );
 }
 
+// Text-based slides that don't have a dedicated image slot but support an
+// optional top image (rendered by StandardSlide's ContentImage).
+const OPTIONAL_IMAGE_TYPES = ['cover', 'text', 'longtext', 'list', 'doublelist', 'cta', 'code'];
+
 export default function EditorPanel({ slide, onUpdate }) {
   const fileRef = useRef(null);
   const fileRef2 = useRef(null);
+  const imgRef = useRef(null);
 
   if (!slide) {
     return (
@@ -133,7 +139,7 @@ export default function EditorPanel({ slide, onUpdate }) {
   return (
     <div className="w-80 flex-shrink-0 flex flex-col border-r border-white/8 overflow-hidden bg-black/20">
       <div className="px-4 pt-4 pb-3 border-b border-white/8">
-        <p className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Slide type</p>
+        <p className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Change slide type</p>
         <select
           value={slide.type}
           onChange={(e) => update('type', e.target.value)}
@@ -334,6 +340,23 @@ export default function EditorPanel({ slide, onUpdate }) {
             <input type="text" value={slide.tag ?? ''} onChange={(e) => update('tag', e.target.value)} placeholder="Topic label..." className={inputCls} />
           </Field>
         </>)}
+
+        {/* ── UNIVERSAL OPTIONAL IMAGE (text-based slides) ── */}
+        {OPTIONAL_IMAGE_TYPES.includes(slide.type) && (
+          <div className="border-t border-white/8 pt-4">
+            <Field label="Image" hint="optional — leave empty to center text">
+              <input ref={imgRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+              <button onClick={() => imgRef.current?.click()} className="w-full bg-white/5 border border-dashed border-white/15 rounded-lg py-6 text-white/40 text-sm hover:border-white/25 hover:text-white/60 transition-colors">
+                {slide.imageUrl ? '✓ Image added — click to replace' : 'Click to add an image'}
+              </button>
+              {slide.imageUrl && (
+                <button onClick={() => update('imageUrl', null)} className="mt-2 text-white/30 hover:text-red-400 text-xs transition-colors">
+                  × Remove image
+                </button>
+              )}
+            </Field>
+          </div>
+        )}
 
       </div>
     </div>

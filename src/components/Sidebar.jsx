@@ -30,6 +30,19 @@ const TYPE_COLORS = {
   framed:     '#38bdf8',
 };
 
+// Template palettes — swatch is [background, accent] for the preview chip.
+const TEMPLATES = [
+  { id: 'dark',      label: 'Dark',      swatch: ['#111111', '#6ee7b7'] },
+  { id: 'warm',      label: 'Warm Cream', swatch: ['#faf6f0', '#7c6f5b'] },
+  { id: 'editorial', label: 'Editorial', swatch: ['#f7f5f2', '#0f0f0f'] },
+  { id: 'tealcard',  label: 'Teal Card', swatch: ['#0d4f4a', '#5eead4'] },
+  { id: 'slate',     label: 'Slate',     swatch: ['#0f172a', '#6366f1'] },
+  { id: 'cloud',     label: 'Cloud',     swatch: ['#eef2f6', '#0284c7'] },
+  { id: 'carbon',    label: 'Carbon',    swatch: ['#0b0b0d', '#3b82f6'] },
+  { id: 'frost',     label: 'Frost',     swatch: ['#f8fafc', '#2563eb'] },
+  { id: 'highlight', label: 'Highlight', swatch: ['#f8f1e7', '#7b87c4'] },
+];
+
 function SortableItem({ slide, index, isSelected, onSelect, onDelete }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: slide.id });
@@ -116,13 +129,8 @@ export default function Sidebar({
   setSlides,
   selectedId,
   setSelectedId,
-  authorName,
-  setAuthorName,
-  profileImage,
-  setProfileImage,
 }) {
   const [addType, setAddType] = useState('text');
-  const profileInputRef = useRef(null);
   const importRef = useRef(null);
 
   // AI generation state
@@ -177,14 +185,6 @@ export default function Sidebar({
     }
   }
 
-  function handleProfileUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setProfileImage(ev.target.result);
-    reader.readAsDataURL(file);
-  }
-
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
@@ -221,7 +221,7 @@ export default function Sidebar({
       {/* Header */}
       <div className="px-4 pt-5 pb-4 border-b border-white/8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-white font-semibold text-sm tracking-wide">Carousel Creator</h1>
+          <p className="text-white/40 text-[10px] uppercase tracking-widest">Carousel</p>
           <button
             onClick={() => importRef.current?.click()}
             className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-white/15 rounded-lg px-3 py-1.5 text-white/80 text-xs font-medium transition-colors"
@@ -278,92 +278,28 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* Template toggle */}
-        <div className="mb-4">
+        {/* Template palette picker */}
+        <div>
           <p className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Template</p>
           <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setTemplate('dark')}
-              className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'dark'
-                  ? 'bg-white/12 text-white border border-white/20'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Dark
-            </button>
-            <button
-              onClick={() => setTemplate('warm')}
-              className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'warm'
-                  ? 'bg-amber-50/15 text-amber-100 border border-amber-200/25'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Warm Cream
-            </button>
-            <button
-              onClick={() => setTemplate('tealcard')}
-              className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'tealcard'
-                  ? 'bg-teal-500/15 text-teal-300 border border-teal-400/30'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Teal Card
-            </button>
-            <button
-              onClick={() => setTemplate('magazine')}
-              className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'magazine'
-                  ? 'bg-stone-100/12 text-stone-200 border border-stone-400/25'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Magazine
-            </button>
-            <button
-              onClick={() => setTemplate('editorial')}
-              className={`col-span-2 py-2 rounded-lg text-xs font-medium transition-all ${
-                template === 'editorial'
-                  ? 'bg-stone-100/10 text-stone-200 border border-stone-300/20'
-                  : 'text-white/40 border border-white/8 hover:border-white/15 hover:text-white/60'
-              }`}
-            >
-              Editorial
-            </button>
+            {TEMPLATES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTemplate(t.id)}
+                className={`flex items-center gap-2 py-2 px-2.5 rounded-lg text-xs font-medium transition-all ${
+                  template === t.id
+                    ? 'bg-white/12 text-white border border-white/25'
+                    : 'text-white/45 border border-white/8 hover:border-white/15 hover:text-white/70'
+                }`}
+              >
+                <span
+                  className="w-4 h-4 rounded-full flex-shrink-0 ring-1 ring-white/15"
+                  style={{ background: `linear-gradient(135deg, ${t.swatch[0]} 50%, ${t.swatch[1]} 50%)` }}
+                />
+                {t.label}
+              </button>
+            ))}
           </div>
-        </div>
-
-        {/* Author name */}
-        <div className="mb-3">
-          <p className="text-white/40 text-[10px] uppercase tracking-widest mb-1.5">Author handle</p>
-          <input
-            type="text"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-            placeholder="@yourhandle"
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white/80 text-xs placeholder-white/25 focus:outline-none focus:border-white/25 transition-colors"
-          />
-        </div>
-
-        {/* Profile image */}
-        <div>
-          <p className="text-white/40 text-[10px] uppercase tracking-widest mb-1.5">Profile photo</p>
-          <input ref={profileInputRef} type="file" accept="image/*" onChange={handleProfileUpload} />
-          <button
-            onClick={() => profileInputRef.current?.click()}
-            className="w-full flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-3 py-2 hover:border-white/20 transition-colors"
-          >
-            {profileImage ? (
-              <img src={profileImage} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-white/20" />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400/40 to-blue-500/40 flex-shrink-0" />
-            )}
-            <span className="text-white/50 text-xs truncate">
-              {profileImage ? 'Click to replace photo' : 'Upload profile photo'}
-            </span>
-          </button>
         </div>
       </div>
 

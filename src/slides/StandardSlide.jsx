@@ -1,7 +1,7 @@
 /**
  * StandardSlide — one component, three themes (dark / warm / editorial)
  * All layout code lives here once. Theme configs drive every visual difference.
- * TealCardSlide and MagazineSlide remain separate (genuinely unique chrome).
+ * TealCardSlide remains separate (genuinely unique chrome).
  */
 
 import { useEffect, useRef } from 'react';
@@ -153,16 +153,203 @@ export const THEMES = {
     codeBg: '#0f0f0f',
     codeBorder: '#1a1a1a',
   },
+
+  // ── Simple tech palettes ──────────────────────────────────────────────────
+  // Flat backgrounds, one accent, no busy decoration.
+  slate: {
+    name: 'slate',
+    bg: '#0f172a',
+    heading: '#f1f5f9',
+    body: '#94a3b8',
+    muted: '#475569',
+    accent: '#6366f1',      // indigo
+    accentAlt: '#818cf8',
+    border: '#1e293b',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    bodyFont: '"DM Sans", system-ui, sans-serif',
+    headingWeight: 700,
+    topBarBg: '#6366f1',
+    topBarH: 5,
+    numStyle: 'left',
+    contentTop: PAD + 50,
+    bottomBorder: false,
+    coverHideTag: false,
+    tagBg: 'rgba(99,102,241,0.1)',
+    tagBorderColor: 'rgba(99,102,241,0.4)',
+    tagColor: '#a5b4fc',
+    tagRadius: 8,
+    tagPad: '8px 20px',
+    tagLetterSpacing: '0.06em',
+    tagUppercase: true,
+    followBg: '#6366f1',
+    followColor: '#ffffff',
+    followRadius: 8,
+    imagePlaceholderBg: '#1e293b',
+    imageBorderColor: '#334155',
+    imageRadius: 14,
+    codeBg: '#0b1120',
+    codeBorder: '#1e293b',
+  },
+
+  cloud: {
+    name: 'cloud',
+    bg: '#eef2f6',
+    heading: '#1e293b',
+    body: '#51606f',
+    muted: '#94a3b8',
+    accent: '#0284c7',      // sky
+    accentAlt: '#0369a1',
+    border: '#dbe3ec',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    bodyFont: '"DM Sans", system-ui, sans-serif',
+    headingWeight: 700,
+    topBarBg: '#0284c7',
+    topBarH: 5,
+    numStyle: 'left',
+    contentTop: PAD + 50,
+    bottomBorder: true,
+    coverHideTag: true,
+    tagBg: 'rgba(2,132,199,0.08)',
+    tagBorderColor: 'rgba(2,132,199,0.3)',
+    tagColor: '#0284c7',
+    tagRadius: 8,
+    tagPad: '8px 20px',
+    tagLetterSpacing: '0.06em',
+    tagUppercase: true,
+    followBg: '#0284c7',
+    followColor: '#ffffff',
+    followRadius: 8,
+    imagePlaceholderBg: '#e2e8f0',
+    imageBorderColor: '#cbd5e1',
+    imageRadius: 14,
+    codeBg: '#0f172a',
+    codeBorder: '#1e293b',
+  },
+
+  carbon: {
+    name: 'carbon',
+    bg: '#0b0b0d',
+    heading: '#fafafa',
+    body: '#a1a1aa',
+    muted: '#52525b',
+    accent: '#3b82f6',      // blue
+    accentAlt: '#60a5fa',
+    border: '#1f1f23',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    bodyFont: '"DM Sans", system-ui, sans-serif',
+    headingWeight: 700,
+    topBarBg: '#3b82f6',
+    topBarH: 4,
+    numStyle: 'left',
+    contentTop: PAD + 50,
+    bottomBorder: true,
+    coverHideTag: false,
+    tagBg: 'rgba(59,130,246,0.1)',
+    tagBorderColor: 'rgba(59,130,246,0.4)',
+    tagColor: '#93c5fd',
+    tagRadius: 6,
+    tagPad: '8px 20px',
+    tagLetterSpacing: '0.06em',
+    tagUppercase: true,
+    followBg: '#3b82f6',
+    followColor: '#ffffff',
+    followRadius: 6,
+    imagePlaceholderBg: '#18181b',
+    imageBorderColor: '#27272a',
+    imageRadius: 12,
+    codeBg: '#0a0a0c',
+    codeBorder: '#1f1f23',
+  },
+
+  frost: {
+    name: 'frost',
+    bg: '#f8fafc',
+    heading: '#0f172a',
+    body: '#475569',
+    muted: '#94a3b8',
+    accent: '#2563eb',      // SaaS blue
+    accentAlt: '#7c3aed',
+    border: '#e2e8f0',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    bodyFont: '"DM Sans", system-ui, sans-serif',
+    headingWeight: 800,
+    topBarBg: 'linear-gradient(90deg, #2563eb, #7c3aed)',
+    topBarH: 6,
+    numStyle: 'editorial',
+    contentTop: PAD + 80,
+    bottomBorder: true,
+    coverHideTag: true,
+    tagBg: 'rgba(37,99,235,0.08)',
+    tagBorderColor: 'rgba(37,99,235,0.32)',
+    tagColor: '#2563eb',
+    tagRadius: 6,
+    tagPad: '7px 18px',
+    tagLetterSpacing: '0.1em',
+    tagUppercase: true,
+    followBg: '#2563eb',
+    followColor: '#ffffff',
+    followRadius: 8,
+    imagePlaceholderBg: '#eef2f7',
+    imageBorderColor: '#dbe3ee',
+    imageRadius: 12,
+    codeBg: '#0f172a',
+    codeBorder: '#1e293b',
+  },
+
+  // "Did You Know" style: cream bg, periwinkle highlight markers + pill CTA.
+  // Use ==word== in headings to get the boxed-marker look.
+  highlight: {
+    name: 'highlight',
+    bg: '#f8f1e7',
+    heading: '#1f1d1b',
+    body: '#6f6f6f',
+    muted: '#b3a994',
+    accent: '#7b87c4',      // periwinkle / slate-blue
+    accentAlt: '#5f6cae',
+    border: '#ece3d5',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    bodyFont: '"DM Sans", system-ui, sans-serif',
+    headingWeight: 800,
+    topBarBg: '#7b87c4',
+    topBarH: 0,
+    numStyle: 'none',
+    contentTop: PAD + 40,
+    bottomBorder: false,
+    coverHideTag: false,
+    tagBg: '#7b87c4',
+    tagBorderColor: '#7b87c4',
+    tagColor: '#ffffff',
+    tagRadius: 999,
+    tagPad: '13px 32px',
+    tagLetterSpacing: '0',
+    tagUppercase: false,
+    followBg: '#7b87c4',
+    followColor: '#ffffff',
+    followRadius: 999,
+    imagePlaceholderBg: '#efe7d8',
+    imageBorderColor: '#e0d5c2',
+    imageRadius: 24,
+    codeBg: '#1f1d1b',
+    codeBorder: '#e0d5c2',
+  },
 };
 
 // ─── SHARED UTILITIES ─────────────────────────────────────────────────────────
 
-function parseFormatting(text, color) {
+export function parseFormatting(text, color) {
   if (!text) return null;
-  // Order matters: match **bold** before *italic* to avoid false partial matches
-  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|__[^_]+__)/).map((seg, i) => {
+  // Order matters: **bold** and ==highlight== before *italic* / __underline__.
+  // ==text== renders a marker box filled with `color` (the theme accent).
+  return text.split(/(\*\*[^*]+\*\*|==[^=]+==|\*[^*]+\*|__[^_]+__)/).map((seg, i) => {
     if (seg.startsWith('**') && seg.endsWith('**'))
       return <strong key={i} style={{ fontWeight: 800 }}>{seg.slice(2, -2)}</strong>;
+    if (seg.startsWith('==') && seg.endsWith('=='))
+      return (
+        <span key={i} style={{
+          background: color, color: '#ffffff', padding: '0.04em 0.22em',
+          borderRadius: 8, boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone',
+        }}>{seg.slice(2, -2)}</span>
+      );
     if (seg.startsWith('*') && seg.endsWith('*'))
       return <em key={i} style={{ fontStyle: 'italic', color }}>{seg.slice(1, -1)}</em>;
     if (seg.startsWith('__') && seg.endsWith('__'))
@@ -195,6 +382,20 @@ function CodeBlock({ code, language, theme }) {
   );
 }
 
+// Optional image shown at the top of text-based slides. Absent → content
+// stays vertically centered by the shell's justifyContent:'center'.
+function ContentImage({ url, theme }) {
+  if (!url) return null;
+  return (
+    <div style={{
+      width: '100%', maxHeight: 430, marginBottom: 38, borderRadius: theme.imageRadius,
+      overflow: 'hidden', border: `1px solid ${theme.imageBorderColor}`, flexShrink: 0,
+    }}>
+      <img src={url} alt="" style={{ width: '100%', height: '100%', maxHeight: 430, objectFit: 'cover', display: 'block' }} />
+    </div>
+  );
+}
+
 function Bullets({ items, theme, fontSize = 30, gap = 14 }) {
   const filtered = (items ?? []).filter(b => b?.trim());
   if (!filtered.length) return null;
@@ -213,6 +414,32 @@ function Bullets({ items, theme, fontSize = 30, gap = 14 }) {
   );
 }
 
+// ─── THEME DECOR ──────────────────────────────────────────────────────────────
+// Optional subtle background flourish, keyed by theme.name. Most themes render
+// nothing (clean look); only Frost adds a faint blueprint grid.
+
+function ThemeDecor({ theme }) {
+  const a = theme.accent;
+  const wrap = { position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' };
+
+  if (theme.name === 'frost') {
+    const lines = [];
+    for (let i = 0; i < 6; i++) {
+      lines.push(<line key={`fx${i}`} x1={780 + i * 56} y1="1010" x2={780 + i * 56} y2="1270" stroke={a} strokeOpacity="0.12" strokeWidth="1.5" />);
+      lines.push(<line key={`fy${i}`} x1="780" y1={1010 + i * 52} x2="1060" y2={1010 + i * 52} stroke={a} strokeOpacity="0.12" strokeWidth="1.5" />);
+    }
+    return (
+      <svg style={wrap} viewBox="0 0 1080 1350" preserveAspectRatio="none">
+        {lines}
+        <circle cx="180" cy="220" r="64" fill="none" stroke={a} strokeOpacity="0.18" strokeWidth="3" />
+      </svg>
+    );
+  }
+
+  // All other themes (dark, warm, editorial, slate, cloud, carbon) → no decor.
+  return null;
+}
+
 // ─── CHROME COMPONENTS ────────────────────────────────────────────────────────
 
 function TopBar({ theme }) {
@@ -223,6 +450,8 @@ function TopBar({ theme }) {
 
 function SlideNum({ slideNum, theme }) {
   const num = String(slideNum).padStart(2, '0');
+
+  if (theme.numStyle === 'none') return null;
 
   if (theme.numStyle === 'square-right') {
     return (
@@ -305,6 +534,7 @@ function SlideContent({ slide, theme }) {
     ...extra,
   });
 
+  const renderBody = () => {
   switch (slide.type) {
     case 'cover':
       return (
@@ -334,11 +564,11 @@ function SlideContent({ slide, theme }) {
             color: theme.accent, opacity: 0.18, fontWeight: 700,
             marginBottom: 8, userSelect: 'none',
           }}>"</div>
-          {/* Intro / context line — lighter, italic, shows first */}
+          {/* Intro / context line — darker than muted, italic, shows first */}
           {slide.body && (
             <p style={{
               margin: '0 0 32px', fontFamily: theme.bodyFont, fontSize: 30,
-              lineHeight: 1.62, color: theme.muted, fontWeight: 300, fontStyle: 'italic',
+              lineHeight: 1.62, color: theme.body, fontWeight: 400, fontStyle: 'italic',
               whiteSpace: 'pre-wrap', wordBreak: 'break-word',
             }}>{slide.body}</p>
           )}
@@ -422,6 +652,14 @@ function SlideContent({ slide, theme }) {
     default:
       return null;
   }
+  };
+
+  return (
+    <>
+      <ContentImage url={slide.imageUrl} theme={theme} />
+      {renderBody()}
+    </>
+  );
 }
 
 // ─── FULL-BLEED SPECIAL LAYOUTS ───────────────────────────────────────────────
@@ -554,6 +792,7 @@ export default function StandardSlide({ slide, slideNum, authorName, profileImag
 
   return (
     <div style={{ width: W, height: H, background: theme.bg, position: 'relative', overflow: 'hidden', fontFamily: theme.bodyFont }}>
+      <ThemeDecor theme={theme} />
       <TopBar theme={theme} />
       <SlideNum slideNum={slideNum} theme={theme} />
       <div style={{
