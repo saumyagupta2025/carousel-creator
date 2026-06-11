@@ -26,7 +26,7 @@ const BLACK = '#0f0f0f';
 const GRAY = '#888888';
 const RULE = '#e0dcd8';
 
-const SERIF = 'Fraunces, Georgia, serif';
+const SERIF = "'Plus Jakarta Sans', system-ui, sans-serif";
 const SANS = "'Plus Jakarta Sans', system-ui, sans-serif";
 
 /* ─── atoms ─────────────────────────────────────────────── */

@@ -52,7 +52,7 @@ export const THEMES = {
     accentAlt: '#3b82f6',   // follow btn, circled numbers
     border: '#222222',
     // Typography
-    headingFont: 'Fraunces, Georgia, serif',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     bodyFont: '"DM Sans", system-ui, sans-serif',
     headingWeight: 700,
     // Top bar
@@ -93,7 +93,7 @@ export const THEMES = {
     accent: '#7c6f5b',
     accentAlt: '#3b82f6',
     border: '#e8e0d4',
-    headingFont: 'Fraunces, Georgia, serif',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     bodyFont: '"DM Sans", system-ui, sans-serif',
     headingWeight: 700,
     topBarBg: 'linear-gradient(90deg, #6ee7b7, #3b82f6)',
@@ -128,7 +128,7 @@ export const THEMES = {
     accent: '#0f0f0f',
     accentAlt: '#0f0f0f',
     border: '#ddd9d3',
-    headingFont: 'Fraunces, Georgia, serif',
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     bodyFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     headingWeight: 700,
     topBarBg: '#0f0f0f',

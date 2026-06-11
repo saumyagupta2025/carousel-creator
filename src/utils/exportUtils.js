@@ -25,7 +25,6 @@ async function renderToDataUrl(slide, index, template, authorName, profileImage)
   await Promise.allSettled([
     document.fonts.load('400 32px "DM Sans"'),
     document.fonts.load('600 32px "DM Sans"'),
-    document.fonts.load('700 32px Fraunces'),
     document.fonts.load('700 32px "Plus Jakarta Sans"'),
   ]);
   await new Promise((r) => setTimeout(r, 300));
