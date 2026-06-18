@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Follow Badge → transparent PNG</title>
+<style>
+  :root { --bg:#0d0f15; --panel:#161a23; --line:#262b38; --txt:#e6e9ef; --mut:#8b93a7; --accent:#7b87c4; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+         background:var(--bg); color:var(--txt); min-height:100vh; display:flex; flex-direction:column; align-items:center; gap:22px; padding:34px 16px 60px; }
+  h1 { font-size:18px; font-weight:700; margin:0; letter-spacing:.2px; }
+  .sub { color:var(--mut); font-size:13px; margin:-12px 0 0; text-align:center; max-width:560px; line-height:1.5; }
+
+  .stage {
+    background-image:
+      linear-gradient(45deg,#1c2030 25%,transparent 25%),
+      linear-gradient(-45deg,#1c2030 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#1c2030 75%),
+      linear-gradient(-45deg,transparent 75%,#1c2030 75%);
+    background-size:24px 24px; background-position:0 0,0 12px,12px -12px,-12px 0;
+    border:1px solid var(--line); border-radius:16px; padding:46px 56px;
+    display:flex; align-items:center; justify-content:center; min-width:520px;
+  }
+
+  /* Live preview only — export is drawn on a canvas to match these values */
+  #badge { display:inline-flex; align-items:center; gap:18px; background:transparent; }
+  #badge .pic {
+    width:96px; height:96px; border-radius:50%; overflow:hidden; flex:0 0 auto;
+    border:3px solid rgba(255,255,255,.6);
+    background:linear-gradient(135deg,var(--accent),rgba(255,255,255,.25));
+  }
+  #badge .pic img { width:100%; height:100%; object-fit:cover; display:block; }
+  #badge .meta { display:flex; flex-direction:column; gap:5px; }
+  #badge .handle { font-weight:800; font-size:32px; line-height:1; }
+  #badge .more   { font-size:21px; line-height:1; opacity:.78; }
+  #badge .btn {
+    margin-left:10px; padding:14px 36px; border-radius:999px;
+    background:var(--accent); color:#fff; font-weight:800; font-size:23px; white-space:nowrap;
+  }
+
+  .panel { width:560px; max-width:100%; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px; display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; }
+  .panel .full { grid-column:1 / -1; }
+  label { display:flex; flex-direction:column; gap:6px; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--mut); }
+  input[type=text] { background:#0f1320; border:1px solid var(--line); border-radius:8px; padding:9px 11px; color:var(--txt); font-size:14px; }
+  input[type=text]:focus { outline:none; border-color:var(--accent); }
+  .row { display:flex; align-items:center; gap:10px; }
+  input[type=color] { width:40px; height:34px; border:1px solid var(--line); border-radius:6px; background:transparent; cursor:pointer; padding:0; }
+  input[type=range] { width:100%; accent-color:var(--accent); }
+  .filebtn { border:1px solid var(--line); background:#0f1320; color:var(--txt); border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; cursor:pointer; }
+  .filebtn:hover { border-color:var(--accent); }
+  .actions { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .dl { border:1px solid var(--line); background:#0f1320; color:var(--txt); border-radius:8px; padding:12px 18px; font-size:14px; font-weight:700; cursor:pointer; }
+  .dl:hover { border-color:var(--accent); }
+  .dl.primary { background:linear-gradient(90deg,#6366f1,#7c3aed); border:none; }
+  .hint { color:var(--mut); font-size:11px; text-align:center; }
+  input[type=file] { display:none; }
+  .swatches { display:flex; gap:6px; }
+  .sw { width:22px; height:22px; border-radius:50%; border:2px solid rgba(255,255,255,.15); cursor:pointer; }
+</style>
+</head>
+<body>
+  <h1>Follow Badge → transparent PNG</h1>
+  <p class="sub">Your photo + “Follow for more” + a Follow button, exported with a transparent background. JPEG has no transparency, so the cutout is a <b>PNG</b>.</p>
+
+  <div class="stage">
+    <div id="badge">
+      <div class="pic"><img id="pic" alt="" crossorigin="anonymous" /></div>
+      <div class="meta">
+        <span class="handle" id="bHandle">@hiddenlayer.ai</span>
+        <span class="more" id="bMore">Follow for more</span>
+      </div>
+      <div class="btn" id="bBtn">Follow</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <label class="full">Profile photo
+      <div class="row">
+        <button class="filebtn" id="upload">Upload photo</button>
+        <span class="hint" id="picName" style="text-align:left">using profile.jpeg if present</span>
+      </div>
+      <input type="file" id="file" accept="image/*" />
+    </label>
+
+    <label>Handle <input type="text" id="handle" value="@hiddenlayer.ai" /></label>
+    <label>Subtitle <input type="text" id="more" value="Follow for more" /></label>
+    <label>Button label <input type="text" id="btn" value="Follow" /></label>
+
+    <label>Text colour
+      <div class="row">
+        <input type="color" id="textColor" value="#ffffff" />
+        <div class="swatches">
+          <span class="sw" style="background:#ffffff" data-tc="#ffffff"></span>
+          <span class="sw" style="background:#111111" data-tc="#111111"></span>
+        </div>
+      </div>
+    </label>
+    <label>Accent (button)
+      <div class="row">
+        <input type="color" id="accent" value="#7b87c4" />
+        <div class="swatches">
+          <span class="sw" style="background:#7b87c4" data-ac="#7b87c4"></span>
+          <span class="sw" style="background:#2563eb" data-ac="#2563eb"></span>
+          <span class="sw" style="background:#0d9488" data-ac="#0d9488"></span>
+          <span class="sw" style="background:#f43f5e" data-ac="#f43f5e"></span>
+        </div>
+      </div>
+    </label>
+    <label class="full">Scale — <span id="scaleVal">3</span>× ( higher = sharper / bigger file )
+      <input type="range" id="scale" min="1" max="5" step="1" value="3" />
+    </label>
+
+    <label class="full">JPEG fallback background (JPEG can’t be transparent)
+      <div class="row">
+        <input type="color" id="jpegBg" value="#000000" />
+        <span class="hint" style="text-align:left">only used by the JPEG button</span>
+      </div>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button class="dl primary" id="dlPng">⬇ Download PNG (transparent)</button>
+    <button class="dl" id="dlJpg">⬇ Download JPEG (with bg)</button>
+  </div>
+  <p class="hint" id="status">No libraries, pure canvas. Works offline.</p>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const FF = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+  const pic = $('pic');
+
+  // Default photo (same folder). dataURL uploads never taint the canvas.
+  pic.src = 'profile.jpeg';
+  pic.onerror = () => { pic.removeAttribute('src'); $('picName').textContent = 'no default — upload a photo'; };
+
+  $('handle').oninput = e => $('bHandle').textContent = e.target.value || '@yourhandle';
+  $('more').oninput   = e => $('bMore').textContent   = e.target.value;
+  $('btn').oninput    = e => $('bBtn').textContent    = e.target.value || 'Follow';
+
+  const setText   = c => { $('bHandle').style.color = c; $('bMore').style.color = c; };
+  const setAccent = c => document.documentElement.style.setProperty('--accent', c);
+  $('textColor').oninput = e => setText(e.target.value);
+  $('accent').oninput    = e => setAccent(e.target.value);
+  setText('#ffffff');
+
+  document.querySelectorAll('.sw').forEach(s => s.onclick = () => {
+    if (s.dataset.tc) { $('textColor').value = s.dataset.tc; setText(s.dataset.tc); }
+    if (s.dataset.ac) { $('accent').value = s.dataset.ac; setAccent(s.dataset.ac); }
+  });
+  $('scale').oninput = e => $('scaleVal').textContent = e.target.value;
+
+  $('upload').onclick = () => $('file').click();
+  $('file').onchange = e => {
+    const f = e.target.files?.[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => { pic.src = ev.target.result; $('picName').textContent = f.name; };
+    r.readAsDataURL(f);
+  };
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function buildCanvas(S, bgColor) {
+    const c = document.createElement('canvas');
+    const ctx = c.getContext('2d');
+
+    const pad = 14 * S, picD = 96 * S, gap1 = 18 * S, gap2 = 28 * S, pillPadX = 36 * S;
+    const handleFont = `800 ${32 * S}px ${FF}`;
+    const moreFont   = `400 ${21 * S}px ${FF}`;
+    const btnFont    = `800 ${23 * S}px ${FF}`;
+
+    const handle = $('bHandle').textContent;
+    const more   = $('bMore').textContent;
+    const btn    = $('bBtn').textContent;
+    const tc = $('textColor').value, ac = $('accent').value;
+
+    ctx.font = handleFont; const hW = ctx.measureText(handle).width;
+    ctx.font = moreFont;   const mW = more ? ctx.measureText(more).width : 0;
+    const metaW = Math.max(hW, mW);
+    ctx.font = btnFont;    const btnTextW = ctx.measureText(btn).width;
+
+    const pillW = btnTextW + pillPadX * 2;
+    const pillH = 52 * S;
+    const blockH = (32 + 8 + 21) * S;            // handle + gap + subtitle
+    const rowH = Math.max(picD, pillH, blockH);
+
+    const W = Math.ceil(pad + picD + gap1 + metaW + gap2 + pillW + pad);
+    const H = Math.ceil(pad + rowH + pad);
+    c.width = W; c.height = H;
+
+    if (bgColor) { ctx.fillStyle = bgColor; ctx.fillRect(0, 0, W, H); }
+    const cy = H / 2;
+
+    // profile (clipped circle + cover-fit) + ring
+    const px = pad, r = picD / 2, ccx = px + r;
+    ctx.save();
+    ctx.beginPath(); ctx.arc(ccx, cy, r, 0, Math.PI * 2); ctx.clip();
+    if (pic.src && pic.complete && pic.naturalWidth) {
+      const s = Math.max(picD / pic.naturalWidth, picD / pic.naturalHeight);
+      const dw = pic.naturalWidth * s, dh = pic.naturalHeight * s;
+      ctx.drawImage(pic, ccx - dw / 2, cy - dh / 2, dw, dh);
+    } else {
+      ctx.fillStyle = ac; ctx.fillRect(px, cy - r, picD, picD);
+    }
+    ctx.restore();
+    ctx.lineWidth = 3 * S; ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath(); ctx.arc(ccx, cy, r - 1.5 * S, 0, Math.PI * 2); ctx.stroke();
+
+    // text block
+    const mx = px + picD + gap1;
+    const topY = cy - blockH / 2;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = tc; ctx.font = handleFont;
+    ctx.fillText(handle, mx, topY);
+    if (more) {
+      ctx.font = moreFont; ctx.globalAlpha = 0.78;
+      ctx.fillText(more, mx, topY + (32 + 8) * S);
+      ctx.globalAlpha = 1;
+    }
+
+    // pill button
+    const plx = mx + metaW + gap2, ply = cy - pillH / 2;
+    ctx.fillStyle = ac; roundRect(ctx, plx, ply, pillW, pillH, pillH / 2); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.font = btnFont;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(btn, plx + pillPadX, cy + 1 * S);
+
+    return c;
+  }
+
+  function download(kind) {
+    try {
+      const S = Number($('scale').value);
+      const canvas = buildCanvas(S, kind === 'jpg' ? $('jpegBg').value : null);
+      canvas.toBlob((blob) => {
+        if (!blob) { $('status').textContent = 'Export failed (blob null).'; return; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = kind === 'jpg' ? 'follow-badge.jpg' : 'follow-badge.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        $('status').textContent = `Downloaded ${a.download} (${canvas.width}×${canvas.height}).`;
+      }, kind === 'jpg' ? 'image/jpeg' : 'image/png', 0.95);
+    } catch (e) {
+      // Canvas tainted (e.g. opened via file:// with a default image) → guidance.
+      $('status').textContent = 'Export blocked: ' + e.message + ' — upload the photo (don\'t rely on the default) or run via the dev/live URL.';
+    }
+  }
+
+  $('dlPng').onclick = () => download('png');
+  $('dlJpg').onclick = () => download('jpg');
+</script>
+</body>
+</html>
